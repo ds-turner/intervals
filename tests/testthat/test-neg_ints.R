@@ -43,7 +43,6 @@ test_that("bounds", {
  "d",        10,    15,     5,        20, "pos",
  "d",        16,    20,     5,        20, "neg",
   )
-  neg_ints(ints, start, end, id, .lower = NULL, .upper = NULL)
 
   expect_equal(act, exp)
 })
@@ -79,7 +78,6 @@ test_that("no bounds", {
     "c",        23,    25, "pos",
     "d",        10,    15, "pos",
   )
-  neg_ints(ints, start, end, id, .lower = NULL, .upper = NULL)
 
   expect_equal(act, exp)
 })

@@ -36,12 +36,19 @@
 #'
 #' @export
 pac_ints <- function(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id) {
-  res <- grp_ints(.data, {{ .start }}, {{ .end }}, .gap = .gap, .group_col = {{ .group_col }}, ... )
+  dt <- eval(substitute(grp_ints(.data, .start, .end, ..., .gap = .gap, .group_col = .group_col)))
 
-  res |>
-    dplyr::summarise(
-      "{{.start}}" := min({{ .start }}),
-      "{{.end}}" := max({{ .end }}),
-      .by = c({{ .group_col }}, ...)
-    )
-  }
+  grp_vars2 <- eval(substitute(alist(..., .group_col)), envir = parent.frame())
+
+  dt <- dt[, .(.start = min(.start), .end = max(.end)), by = grp_vars2,
+           env = list(
+             grp_vars2 =  substitute(grp_vars2),
+             .start = substitute(.start),
+             .end = substitute(.end)
+           )
+  ]
+
+  return(dt)
+}
+
+

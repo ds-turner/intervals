@@ -32,23 +32,40 @@
 #' @export
 grp_ints <- function(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id) {
 
-  # Ensure the input is a data frame or tibble
-  if (!is.data.frame(.data)) {
-    stop("`.data` must be a data frame or tibble.")
-  }
+  grp_vars <- eval(substitute(alist(...)), envir = parent.frame())
 
-  # return data of 1 row or less
-  if (nrow(.data) <= 2) {
-    return(.data)
-  }
+  .dt <- get_dt(.data)
 
-  .data |>
-    dplyr::arrange({{ .start }}) |>
-    dplyr::mutate(
-      cum_max_end = cummax(as.numeric({{ .end }})),
-      .id = cumsum(as.numeric({{ .start }}) - .gap > dplyr::lag(cum_max_end, default = -Inf)) + 1,
-      .by = c(...),
-    ) |>
-    dplyr::mutate("{{.group_col}}"  := dplyr::cur_group_id(), .by = c(.id, ...)) |>
-    dplyr::select(-cum_max_end, -.id)
+  .dt <- .dt[order(..., .start),env = list(
+    .start = substitute(.start)
+  )]
+
+  # Step 2: Calculate cumulative max of 'end' and create id for overlapping intergers
+  .dt[ , .group_col := cumsum(cummax(shift(as.numeric(.end), fill = as.numeric(.end)[1])) < as.numeric(.start) - .gap), by = grp_vars,
+       env = list(
+         .group_col =  substitute(.group_col),
+         grp_vars = substitute(grp_vars),
+         .start = substitute(.start),
+         .end = substitute(.end)
+       )
+  ]
+
+  grp_vars2 <- eval(substitute(alist(..., .group_col)), envir = parent.frame())
+
+  # Step 3: Create 'int_grp_id' based on '.id' and 'id'
+  .dt[, .group_col := .GRP, by = grp_vars2,
+      env = list(
+        grp_vars2 =  substitute(grp_vars2),
+        .group_col =  substitute(.group_col)
+      )
+  ]
+
+  return(.data[])
+}
+
+get_dt <- function(.data) {
+  if(!data.table::is.data.table(.data)) {
+    .data <- data.table::as.data.table(.data)
+  }
+  return(.data)
 }
