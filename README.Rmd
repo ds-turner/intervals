@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of intervals is to help users work with intervals, particular cleaning them.  It groups and merges overlapping intervals as well as allowing the user to remove parts of one set of intervals, based on another.
+{intervals} helps users tidy up messy intervals. It can group and merge overlapping intervals as well as remove parts of one set of intervals, based on another set of intervals.
 
 ## Installation
 
@@ -27,4 +27,20 @@ You can install the development version of intervals from [GitHub](https://githu
 ``` r
 # install.packages("pak")
 pak::pak("ds-turner/intervals")
+```
+
+## Useage
+
+```{r}
+library(intervals)
+ ints <- data.frame(
+    id = c("A", "A", "A", "B", "B", "B"),
+    st = c(1, 2, 5, 10, 12, 14),
+    end = c(3, 4, 7, 11, 14, 16)
+  )
+
+grp_ints(ints, st, end, id)
+```
+```{r}
+pac_ints(ints, st, end, id)
 ```

@@ -6,10 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of intervals is to help users work with intervals, particular
-cleaning them. It groups and merges overlapping intervals as well as
-allowing the user to remove parts of one set of intervals, based on
-another.
+{intervals} helps users tidy up messy intervals. It can group and merge
+overlapping intervals as well as remove parts of one set of intervals,
+based on another set of intervals.
 
 ## Installation
 
@@ -19,4 +18,35 @@ You can install the development version of intervals from
 ``` r
 # install.packages("pak")
 pak::pak("ds-turner/intervals")
+```
+
+## Useage
+
+``` r
+library(intervals)
+ ints <- data.frame(
+    id = c("A", "A", "A", "B", "B", "B"),
+    st = c(1, 2, 5, 10, 12, 14),
+    end = c(3, 4, 7, 11, 14, 16)
+  )
+
+grp_ints(ints, st, end, id)
+#>        id    st   end int_grp_id
+#>    <char> <num> <num>      <int>
+#> 1:      A     1     3          1
+#> 2:      A     2     4          1
+#> 3:      A     5     7          2
+#> 4:      B    10    11          3
+#> 5:      B    12    14          4
+#> 6:      B    14    16          4
+```
+
+``` r
+pac_ints(ints, st, end, id)
+#>        id int_grp_id    st   end
+#>    <char>      <int> <num> <num>
+#> 1:      A          1     1     4
+#> 2:      A          2     5     7
+#> 3:      B          3    10    11
+#> 4:      B          4    12    16
 ```

@@ -12,8 +12,9 @@
 #' @param .gap The maximum allowed gap between intervals for them to be considered overlapping.
 #'             Intervals are grouped if the start of one interval is less than or equal to
 #'             the end of the previous interval plus the gap.
+#' @param .group_col The name of the column that will indicate the group ID for overlapping intervals.  Defualt is int_grp_id.
 #'
-#' @return A tibble with the original data and an additional column `int_grp_id` indicating
+#' @return A tibble with the original data and an additional column indicating
 #'         the group ID for overlapping intervals.
 #'
 #' @examples

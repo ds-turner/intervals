@@ -12,7 +12,7 @@ test_that("bounds", {
 
   act <- neg_ints(ints, start, end, id, .lower = index, .upper = study_end)
 
-  exp <- tibble::tibble(
+  exp <- data.frame(
     id = c(
       "a",
       "a",
@@ -59,7 +59,7 @@ test_that("bounds", {
     )
   )
 
-  expect_equal(act, exp)
+  expect_equal(act, exp, ignore_attr = TRUE)
 })
 
 
@@ -67,12 +67,12 @@ test_that("no bounds", {
 
   act <- neg_ints(ints, start, end, id)
 
-  exp <- tibble::tibble(
+  exp <- data.frame(
     id = c("a", "a", "a", "a", "a", "a", "a", "a", "a", "b", "b", "b", "c", "c", "c", "c", "c", "c", "c", "d"),
     start = c(1, 4, 4, 8, 10, 16, 18, 22, 23, 7, 10, 12, 1, 4, 7, 10, 12, 17, 23, 10),
     end = c(3, 7, 3, 9, 15, 17, 21, 22, 25, 9, 11, 16, 3, 6, 9, 11, 16, 22, 25, 15),
     int_type = c("pos", "pos", "neg", "neg", "pos", "neg", "pos", "neg", "pos", "pos", "neg", "pos", "pos", "neg", "pos", "neg", "pos", "neg", "pos", "pos"))
 
 
-  expect_equal(act, exp)
+  expect_equal(act, exp, ignore_attr = TRUE)
 })

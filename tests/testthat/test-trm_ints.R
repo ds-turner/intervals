@@ -80,7 +80,7 @@ test_that("missed chop", {
     end = c(4,15)
   )
 
-  exp <- tibble::as_tibble(simple_x)
+  exp <- data.frame(simple_x)
 
   act <- trm_ints(simple_x, y, start, end, start, end)
 
@@ -235,21 +235,21 @@ test_that("Date Time", {
     start = rep(5, pats),
     end = rep(20, pats)
   ) |>
-    dplyr::mutate(across(c(start, end), lubridate::as_datetime))
+    dplyr::mutate(across(c(start, end), as.POSIXct))
 
   y <- data.frame(
     id = c(1, 2, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7),
     start = c(10, 4, 4, 19, 4, 10, 19, 4, 9, 14, 19, 7, 9,  11, 13),
     end = c(15, 21, 6, 21, 6, 15, 21, 6, 11, 16, 21, 8, 10, 12, 18)
   ) |>
-    dplyr::mutate(across(c(start, end), lubridate::as_datetime))
+    dplyr::mutate(across(c(start, end), as.POSIXct))
 
   exp <- data.frame(
     id = c(1, 1, 3, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7),
     start = c(5, 15, 6, 5, 6, 15, 6, 11, 16, 5, 8, 10, 12, 18),
     end = c(10, 20, 20, 19, 10, 19, 9, 14, 19, 7, 9, 11, 13, 20)
   ) |>
-    dplyr::mutate(across(c(start, end), lubridate::as_datetime))
+    dplyr::mutate(across(c(start, end), as.POSIXct))
 
   act <- trm_ints(x, y, start, end, start, end, id)
 

@@ -18,9 +18,11 @@ grp_ints(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id)
 \item{.gap}{The maximum allowed gap between intervals for them to be considered overlapping.
 Intervals are grouped if the start of one interval is less than or equal to
 the end of the previous interval plus the gap.}
+
+\item{.group_col}{The name of the column that will indicate the group ID for overlapping intervals.  Defualt is int_grp_id.}
 }
 \value{
-A tibble with the original data and an additional column \code{int_grp_id} indicating
+A tibble with the original data and an additional column indicating
 the group ID for overlapping intervals.
 }
 \description{
