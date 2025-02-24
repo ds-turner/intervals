@@ -36,7 +36,11 @@
 #'
 #' @export
 pac_ints <- function(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id) {
-  dt <- eval(substitute(grp_ints(.data, .start, .end, ..., .gap = .gap, .group_col = .group_col)))
+
+  x <- .data
+
+  dt <- eval(substitute(grp_ints(x, .start, .end, ..., .gap = .gap, .group_col = .group_col)))
+
 
   grp_vars2 <- eval(substitute(alist(..., .group_col)), envir = parent.frame())
 

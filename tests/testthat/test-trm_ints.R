@@ -12,14 +12,14 @@ test_that("chop start", {
     end = c(6)
   )
 
-  exp <- tibble::tibble(
+  exp <- data.frame(
     start = c(6),
     end = c(10)
   )
 
   act <- trm_ints(simple_x, y, start, end, start, end)
 
-  expect_equal(exp, act)
+  expect_equal(exp, act, ignore_attr = T)
 })
 
 test_that("chop end", {
@@ -29,14 +29,14 @@ test_that("chop end", {
     end = c(11)
   )
 
-  exp <- tibble::tibble(
+  exp <- data.frame(
     start = c(5),
     end = c(8)
   )
 
   act <- trm_ints(simple_x, y, start, end, start, end)
 
-  expect_equal(exp, act)
+  expect_equal(exp, act, ignore_attr = T)
 })
 
 test_that("chop middle", {
@@ -46,14 +46,14 @@ test_that("chop middle", {
     end = c(8)
   )
 
-  exp <- tibble::tibble(
+  exp <- data.frame(
     start = c(5, 8),
     end = c(7, 10)
   )
 
   act <- trm_ints(simple_x, y, start, end, start, end)
 
-  expect_equal(exp, act)
+  expect_equal(exp, act, ignore_attr = T)
 })
 
 test_that("chop all", {
@@ -63,14 +63,14 @@ test_that("chop all", {
     end = c(11)
   )
 
-  exp <- tibble::tibble(
+  exp <- data.frame(
     start = numeric(),
     end = numeric()
   )
 
   act <- trm_ints(simple_x, y, start, end, start, end)
 
-  expect_equal(exp, act)
+  expect_equal(exp, act, ignore_attr = T)
 })
 
 test_that("missed chop", {
@@ -84,7 +84,7 @@ test_that("missed chop", {
 
   act <- trm_ints(simple_x, y, start, end, start, end)
 
-  expect_equal(exp, act)
+  expect_equal(exp, act, ignore_attr = T)
 })
 
 
@@ -98,14 +98,14 @@ test_that("chop both ends", {
     end = c(6,15)
   )
 
-  exp <- tibble::tibble(
+  exp <- data.frame(
     start = c(6),
     end = c(9)
   )
 
   act <- trm_ints(simple_x, y, start, end, start, end)
 
-  expect_equal(exp, act)
+  expect_equal(exp, act, ignore_attr = T)
 })
 
 
@@ -117,14 +117,14 @@ test_that("Chop 2 bits out of the middle", {
     end = c(7,9)
   )
 
-  exp <- tibble::tibble(
+  exp <- data.frame(
     start = c(5, 7, 9),
     end = c(6, 8, 10)
   )
 
   act <- trm_ints(simple_x, y, start, end, start, end)
 
-  expect_equal(exp, act)
+  expect_equal(exp, act, ignore_attr = T)
 })
 
 # Grouped -----------------------------------------------------------------
@@ -141,7 +141,7 @@ test_that("simple grouped", {
     end = c(7, 14, 7, 14)
   )
 
-  exp <- tibble::tibble(
+  exp <- data.frame(
     id = c("a", "a", "a", "b", "b", "b"),
     start = c(1, 10, 14, 1, 7, 14),
     end = c(3, 12, 15, 3, 12, 20)
@@ -149,7 +149,7 @@ test_that("simple grouped", {
 
   act <- trm_ints(.a, .b, start, end, start, end, id)
 
-  expect_equal(exp, act)
+  expect_equal(exp, act, ignore_attr = T)
 })
 
 
@@ -164,46 +164,21 @@ test_that("mutiple ids", {
     end = rep(20, pats)
   )
 
-  y <- tibble::tribble(
-    ~id,  ~start, ~end,
-    1,  10, 15, #
-    2,  4,  21,
-    3,  4,  6,
-    4,  19, 21,
-    5,  4,  6,
-    5,  10, 15,
-    5,  19, 21,
-    6,  4,  6,
-    6,  9,  11,
-    6,  14, 16,
-    6,  19, 21,
-    7,  7,  8,
-    7,  9,  10,
-    7,  11, 12,
-    7,  13, 18,
-  )
+  y <- data.frame(
+    id = c(1, 2, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7),
+    start = c(10, 4, 4, 19, 4, 10, 19, 4, 9, 14, 19, 7, 9, 11, 13),
+    end = c(15, 21, 6, 21, 6, 15, 21, 6, 11, 16, 21, 8, 10, 12, 18)
+    )
 
-  exp <- tibble::tribble(
-    ~id,  ~start, ~end,
-    1,5,10,
-    1,15,20,
-    3,6,20,
-    4,5,19,
-    5,6,10,
-    5,15,19,
-    6,6,9,
-    6,11,14,
-    6,16,19,
-    7,5,7,
-    7,8,9,
-    7,10,11,
-    7,12,13,
-    7,18,20,
-  )
+  exp <- data.frame(
+    id = c(1, 1, 3, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7),
+    start = c(5, 15, 6, 5, 6, 15, 6, 11, 16, 5, 8, 10, 12, 18),
+    end = c(10, 20, 20, 19, 10, 19, 9, 14, 19, 7, 9, 11, 13, 20)
+    )
 
   act <- trm_ints(x, y, start, end, start, end, id)
 
-  expect_equal(act, exp)
+  expect_equal(act, exp, ignore_attr = T)
 
 })
 
@@ -230,48 +205,23 @@ test_that("Dates", {
   ) |>
     dplyr::mutate(across(c(start, end), as.Date))
 
-  y <- tibble::tribble(
-    ~id,  ~start, ~end,
-    1,  10, 15, #
-    2,  4,  21,
-    3,  4,  6,
-    4,  19, 21,
-    5,  4,  6,
-    5,  10, 15,
-    5,  19, 21,
-    6,  4,  6,
-    6,  9,  11,
-    6,  14, 16,
-    6,  19, 21,
-    7,  7,  8,
-    7,  9,  10,
-    7,  11, 12,
-    7,  13, 18,
+  y <- data.frame(
+    id = c(1, 2, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7),
+    start = c(10, 4, 4, 19, 4, 10, 19, 4, 9, 14, 19, 7, 9,  11, 13),
+    end = c(15, 21, 6, 21, 6, 15, 21, 6, 11, 16, 21, 8, 10, 12, 18)
   ) |>
     dplyr::mutate(across(c(start, end), as.Date))
 
-  exp <- tibble::tribble(
-    ~id,  ~start, ~end,
-    1,5,10,
-    1,15,20,
-    3,6,20,
-    4,5,19,
-    5,6,10,
-    5,15,19,
-    6,6,9,
-    6,11,14,
-    6,16,19,
-    7,5,7,
-    7,8,9,
-    7,10,11,
-    7,12,13,
-    7,18,20,
-  ) |>
+  exp <- data.frame(
+    id = c(1, 1, 3, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7),
+    start = c(5, 15, 6, 5, 6, 15, 6, 11, 16, 5, 8, 10, 12, 18),
+    end = c(10, 20, 20, 19, 10, 19, 9, 14, 19, 7, 9, 11, 13, 20)
+    ) |>
     dplyr::mutate(across(c(start, end), as.Date))
 
   act <- trm_ints(x, y, start, end, start, end, id)
 
-  expect_equal(act, exp)
+  expect_equal(act, exp, ignore_attr = T)
 
 })
 
@@ -287,48 +237,23 @@ test_that("Date Time", {
   ) |>
     dplyr::mutate(across(c(start, end), lubridate::as_datetime))
 
-  y <- tibble::tribble(
-    ~id,  ~start, ~end,
-    1,  10, 15, #
-    2,  4,  21,
-    3,  4,  6,
-    4,  19, 21,
-    5,  4,  6,
-    5,  10, 15,
-    5,  19, 21,
-    6,  4,  6,
-    6,  9,  11,
-    6,  14, 16,
-    6,  19, 21,
-    7,  7,  8,
-    7,  9,  10,
-    7,  11, 12,
-    7,  13, 18,
+  y <- data.frame(
+    id = c(1, 2, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7),
+    start = c(10, 4, 4, 19, 4, 10, 19, 4, 9, 14, 19, 7, 9,  11, 13),
+    end = c(15, 21, 6, 21, 6, 15, 21, 6, 11, 16, 21, 8, 10, 12, 18)
   ) |>
     dplyr::mutate(across(c(start, end), lubridate::as_datetime))
 
-  exp <- tibble::tribble(
-    ~id,  ~start, ~end,
-    1,5,10,
-    1,15,20,
-    3,6,20,
-    4,5,19,
-    5,6,10,
-    5,15,19,
-    6,6,9,
-    6,11,14,
-    6,16,19,
-    7,5,7,
-    7,8,9,
-    7,10,11,
-    7,12,13,
-    7,18,20,
+  exp <- data.frame(
+    id = c(1, 1, 3, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7),
+    start = c(5, 15, 6, 5, 6, 15, 6, 11, 16, 5, 8, 10, 12, 18),
+    end = c(10, 20, 20, 19, 10, 19, 9, 14, 19, 7, 9, 11, 13, 20)
   ) |>
     dplyr::mutate(across(c(start, end), lubridate::as_datetime))
 
   act <- trm_ints(x, y, start, end, start, end, id)
 
-  expect_equal(act, exp)
+  expect_equal(act, exp, ignore_attr = T)
 
 })
 

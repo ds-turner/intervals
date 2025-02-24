@@ -34,14 +34,19 @@ grp_ints <- function(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id
 
   grp_vars <- eval(substitute(alist(...)), envir = parent.frame())
 
-  .dt <- get_dt(.data)
+  # create a data.table if
+  if(!data.table::is.data.table(.data)) {
+    .data <- data.table::as.data.table(.data)
+  }
 
-  .dt <- .dt[order(..., .start),env = list(
+
+
+  .data <- .data[order(..., .start),env = list(
     .start = substitute(.start)
   )]
 
   # Step 2: Calculate cumulative max of 'end' and create id for overlapping intergers
-  .dt[ , .group_col := cumsum(cummax(shift(as.numeric(.end), fill = as.numeric(.end)[1])) < as.numeric(.start) - .gap), by = grp_vars,
+  .data[ , .group_col := cumsum(cummax(shift(as.numeric(.end), fill = as.numeric(.end)[1])) < as.numeric(.start) - .gap), by = grp_vars,
        env = list(
          .group_col =  substitute(.group_col),
          grp_vars = substitute(grp_vars),
@@ -53,7 +58,7 @@ grp_ints <- function(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id
   grp_vars2 <- eval(substitute(alist(..., .group_col)), envir = parent.frame())
 
   # Step 3: Create 'int_grp_id' based on '.id' and 'id'
-  .dt[, .group_col := .GRP, by = grp_vars2,
+  .data[, .group_col := .GRP, by = grp_vars2,
       env = list(
         grp_vars2 =  substitute(grp_vars2),
         .group_col =  substitute(.group_col)
@@ -61,11 +66,4 @@ grp_ints <- function(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id
   ]
 
   return(.data[])
-}
-
-get_dt <- function(.data) {
-  if(!data.table::is.data.table(.data)) {
-    .data <- data.table::as.data.table(.data)
-  }
-  return(.data)
 }
