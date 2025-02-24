@@ -29,7 +29,17 @@ library(intervals)
     st = c(1, 2, 5, 10, 12, 14),
     end = c(3, 4, 7, 11, 14, 16)
   )
+ ints
+#>   id st end
+#> 1  A  1   3
+#> 2  A  2   4
+#> 3  A  5   7
+#> 4  B 10  11
+#> 5  B 12  14
+#> 6  B 14  16
+```
 
+``` r
 grp_ints(ints, st, end, id)
 #>        id    st   end int_grp_id
 #>    <char> <num> <num>      <int>
