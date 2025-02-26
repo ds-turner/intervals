@@ -14,7 +14,8 @@ test_that("Single interval, within bounds ()", {
     start = numeric(),
     end = numeric()
   )
-  act_ub <- neg_ints(dat, start, end)
+
+  act_ub <- neg_ints_dt(dat, start, end)
   expect_equal(act_ub, ex_ub, ignore_attr = TRUE)
 
   ex_b <- data.frame(
@@ -23,7 +24,8 @@ test_that("Single interval, within bounds ()", {
     lower = c(1),
     upper = c(6)
   )
-  act_b <- neg_ints(dat, start, end, .lower = lower, .upper = upper)
+
+  act_b <- neg_ints_dt(dat, start, end, .lower = lower, .upper = upper)
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
@@ -40,7 +42,7 @@ test_that("Single interval, overlap 1 bound", {
     start = numeric(),
     end = numeric()
   )
-  act_ub <- neg_ints(dat, start, end)
+  act_ub <- neg_ints_dt(dat, start, end)
   expect_equal(act_ub, ex_ub, ignore_attr = TRUE)
 
   ex_b <- data.frame(
@@ -49,7 +51,7 @@ test_that("Single interval, overlap 1 bound", {
     lower = c(1),
     upper = c(6)
   )
-  act_b <- neg_ints(dat, start, end, .lower = lower, .upper = upper)
+  act_b <- neg_ints_dt(dat, start, end, .lower = lower, .upper = upper)
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
@@ -66,7 +68,7 @@ test_that("Single interval, overlap both bounds", {
     start = numeric(),
     end = numeric()
   )
-  act_ub <- neg_ints(dat, start, end)
+  act_ub <- neg_ints_dt(dat, start, end)
   expect_equal(act_ub, ex_ub, ignore_attr = TRUE)
 
   ex_b <- data.frame(
@@ -75,7 +77,7 @@ test_that("Single interval, overlap both bounds", {
     lower = numeric(),
     upper = numeric()
   )
-  act_b <- neg_ints(dat, start, end, .lower = lower, .upper = upper)
+  act_b <- neg_ints_dt(dat, start, end, .lower = lower, .upper = upper)
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
@@ -94,7 +96,7 @@ test_that("2 intervals, within bounds ()", {
     start = c(5),
     end = c(6)
   )
-  act_ub <- neg_ints(dat, start, end)
+  act_ub <- neg_ints_dt(dat, start, end)
   expect_equal(act_ub, ex_ub, ignore_attr = TRUE)
 
   ex_b <- data.frame(
@@ -103,7 +105,7 @@ test_that("2 intervals, within bounds ()", {
     lower = c(1),
     upper = c(10)
   )
-  act_b <- neg_ints(dat, start, end, .lower = lower, .upper = upper)
+  act_b <- neg_ints_dt(dat, start, end, .lower = lower, .upper = upper)
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
@@ -122,7 +124,7 @@ test_that("Single interval, before the bounds", {
     start = numeric(),
     end = numeric()
   )
-  act_ub <- neg_ints(dat, start, end)
+  act_ub <- neg_ints_dt(dat, start, end)
   expect_equal(act_ub, ex_ub, ignore_attr = TRUE)
 
   ex_b <- data.frame(
@@ -131,7 +133,7 @@ test_that("Single interval, before the bounds", {
     lower = c(4),
     upper = c(6)
   )
-  act_b <- neg_ints(dat, start, end, .lower = lower, .upper = upper)
+  act_b <- neg_ints_dt(dat, start, end, .lower = lower, .upper = upper)
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
@@ -148,7 +150,7 @@ test_that("Single interval, after the bounds", {
     start = numeric(),
     end = numeric()
   )
-  act_ub <- neg_ints(dat, start, end)
+  act_ub <- neg_ints_dt(dat, start, end)
   expect_equal(act_ub, ex_ub, ignore_attr = TRUE)
 
   ex_b <- data.frame(
@@ -157,7 +159,7 @@ test_that("Single interval, after the bounds", {
     lower = c(4),
     upper = c(6)
   )
-  act_b <- neg_ints(dat, start, end, .lower = lower, .upper = upper)
+  act_b <- neg_ints_dt(dat, start, end, .lower = lower, .upper = upper)
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
@@ -174,7 +176,7 @@ test_that("2 intervals, either side of the bounds", {
     start = c(3),
     end = c(7)
   )
-  act_ub <- neg_ints(dat, start, end)
+  act_ub <- neg_ints_dt(dat, start, end)
   expect_equal(act_ub, ex_ub, ignore_attr = TRUE)
 
   ex_b <- data.frame(
@@ -183,7 +185,7 @@ test_that("2 intervals, either side of the bounds", {
     lower = c(4),
     upper = c(6)
   )
-  act_b <- neg_ints(dat, start, end, .lower = lower, .upper = upper)
+  act_b <- neg_ints_dt(dat, start, end, .lower = lower, .upper = upper)
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
@@ -200,7 +202,7 @@ test_that("single before after the bounds, single interval within the bounds", {
     start = c(3),
     end = c(7)
   )
-  act_ub <- neg_ints(dat, start, end)
+  act_ub <- neg_ints_dt(dat, start, end)
   expect_equal(act_ub, ex_ub, ignore_attr = TRUE)
 
   ex_b <- data.frame(
@@ -209,7 +211,7 @@ test_that("single before after the bounds, single interval within the bounds", {
     lower = c(4),
     upper = c(12)
   )
-  act_b <- neg_ints(dat, start, end, .lower = lower, .upper = upper)
+  act_b <- neg_ints_dt(dat, start, end, .lower = lower, .upper = upper)
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
@@ -226,7 +228,7 @@ test_that("single interval within the bounds, single after after the bounds", {
     start = c(5),
     end = c(8)
   )
-  act_ub <- neg_ints(dat, start, end)
+  act_ub <- neg_ints_dt(dat, start, end)
   expect_equal(act_ub, ex_ub, ignore_attr = TRUE)
 
   ex_b <- data.frame(
@@ -235,7 +237,7 @@ test_that("single interval within the bounds, single after after the bounds", {
     lower = c(1),
     upper = c(7)
   )
-  act_b <- neg_ints(dat, start, end, .lower = lower, .upper = upper)
+  act_b <- neg_ints_dt(dat, start, end, .lower = lower, .upper = upper)
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
@@ -263,7 +265,7 @@ test_that("bounds", {
     upper = c(20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20)
   )
 
-  act <- neg_ints(ints, start, end, id, .lower = lower, .upper = upper)
+  act <- neg_ints_dt(ints, start, end, id, .lower = lower, .upper = upper)
 
   exp <- data.frame(
     id = c("a", "a", "b", "b", "b", "c", "c", "c",  "d", "d"),
@@ -271,9 +273,9 @@ test_that("bounds", {
     end = c(9, 17, 6, 11, 20, 6, 11, 22, 9, 20),
     lower = c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5),
     upper = c(20, 20, 20, 20, 20, 20, 20, 20, 20, 20)
-    )
+  )
 
-  expect_equal(act, exp, ignore_attr = TRUE)
+  expect_equal(exp, act, ignore_attr = TRUE)
 })
 
 
@@ -285,13 +287,13 @@ test_that("no bounds", {
     end = c(3, 7, 15, 21, 25, 9, 16, 3, 9, 16, 25, 15)
   )
 
-  act <- neg_ints(ints, start, end, id)
+  act <- neg_ints_dt(ints, start, end, id)
 
   exp <- data.frame(
-    id = c("a", "a", "a", "b", "c", "c", "c"),
+    id = c( "a", "a", "a", "b", "c", "c", "c"),
     start = c( 8, 16, 22, 10,4,10,17),
     end = c( 9, 17, 22, 11, 6,11,22)
-    )
+  )
 
   expect_equal(act, exp, ignore_attr = TRUE)
 })

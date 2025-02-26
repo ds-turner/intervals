@@ -45,67 +45,80 @@
 #' @export
 trm_ints <- function(x, y, .x_start, .x_end, .y_start, .y_end, ..., order = TRUE) {
 
-  # get the unique split points
-  split_points <- get_split_points(x, y, {{ .x_start }}, {{ .x_end }}, {{ .y_start }}, {{ .y_end }}, ...)
+  # create a data.table if
+  if(!data.table::is.data.table(x)) {
+    x <- data.table::as.data.table(x)
+  }
+
+  # create a data.table if
+  if(!data.table::is.data.table(y)) {
+    y <- data.table::as.data.table(y)
+  }
 
   # split up the ints into the smallest possible parts
-  ints <- split_ints(split_points, {{ .x_start }}, {{ .x_end }}, ...)
+  i <- eval(substitute(split_ints_dt(x, y, .x_start, .x_end, .y_start, .y_end, ...)))
 
   # remove the parts thqt we dont want
-  ints <- rm_ints(x, y, ints, {{ .x_start }}, {{ .x_end }}, {{ .y_start }}, {{ .y_end }}, ..., order = order)
+  i <- eval(substitute(rm_ints_dt(i, x, y, .x_start, .x_end, .y_start, .y_end, ...)))
 
-  return(ints)
+  if(order) {
+    eval(substitute(setorder(i, ..., .x_start, .x_end)))
+  }
 
+  return(i)
 }
-
 
 # Helper functions --------------------------------------------------------
 
-get_split_points <- function(x, y, .x_start, .x_end, .y_start, .y_end, ...) {
+split_ints_dt <- function(x, y, .x_start, .x_end, .y_start, .y_end, ...) {
+  # get all the split points
+  points <- rbindlist(
+    list(
+      x[, stx, env = list(stx = eval(substitute(alist(..., point = .x_start))))],
+      x[, enx, env = list(enx = eval(substitute(alist(..., point = .x_end))))],
+      y[, sty, env = list(sty = eval(substitute(alist(..., point = .y_start))))],
+      y[, eny, env = list(eny = eval(substitute(alist(..., point = .y_end))))]
+    )
+  )
 
-  dplyr::bind_rows(
-    dplyr::select(x,...,point = {{.x_start}}),
-    dplyr::select(x,...,point = {{.x_end}}),
-    dplyr::select(y,...,point = {{.y_start}}),
-    dplyr::select(y,...,point = {{.y_end}})
-  ) |>
-    dplyr::distinct() |>
-    dplyr::arrange(point)
+  # create new intervals
+  eval(substitute(setorder(points, point)))
+  points[, let(.x_end = shift(point, type = "lead"), .x_start = point), by = grp_vars,
+         env = list(
+           .x_end = substitute(.x_end),
+           .x_start = substitute(.x_start),
+           grp_vars = eval(substitute(alist(...)))
+         )]
+
+  # drop incomple intervals and select cols
+  points[!is.na(.x_end), vars,
+         env = list(
+           .x_end = substitute(.x_end),
+           vars = eval(substitute(alist(..., .x_start, .x_end)))
+         )]
+}
+
+get_within_ids <- function(x, y, .x_start, .x_end, .y_start, .y_end, ...) {
+
+  ids <- names(rlang::enquos(..., .named = TRUE))
+  .x_start <- deparse(substitute(.x_start))
+  .x_end <- deparse(substitute(.x_end))
+  .y_start <- deparse(substitute(.y_start))
+  .y_end <- deparse(substitute(.y_end))
+
+  join_spec = c(ids, paste(.x_start, ">=", .y_start), paste(.x_end,"<=",.y_end))
+
+  x[y, on = join_spec, which = T]
 
 }
 
-split_ints <- function(split_points, .x_start, .x_end, ...) {
+rm_ints_dt <- function(i, x, y, .x_start, .x_end, .y_start, .y_end, ...) {
 
-  split_points |>
-    dplyr::mutate(# work out the new splits
-      "{{.x_end}}" := dplyr::lead(point),
-      .by = c(...)
-    ) |>
-    dplyr::filter(!is.na({{.x_end}})) |>
-    dplyr::select(..., {{.x_start}} := point, {{ .x_end }})
+  x_within <- eval(substitute(get_within_ids(i, x, .x_start, .x_end, .x_start, .x_end, ...)))
+  y_within <- eval(substitute(get_within_ids(i, y, .x_start, .x_end, .y_start, .y_end, ...)))
 
-}
+  keep <- x_within[!x_within %in% y_within]
 
-rm_ints <- function(x, y, ints, .x_start, .x_end, .y_start, .y_end, ..., order = TRUE) {
+  i[keep]
 
-  # keep the intervals that overlap with x
-  ints <- ints |>
-    dplyr::semi_join(
-      x,
-      by = dplyr::join_by(..., within({{ .x_start }}, {{ .x_end }}, {{ .x_start }}, {{ .x_end }}))
-    )
-
-  # remove the intervals that overlap with y
-  ints <- ints |>
-    dplyr::anti_join(
-      y,
-      by = dplyr::join_by(..., within({{ .x_start }}, {{ .x_end }}, {{ .y_start }}, {{ .y_end }}))
-    )
-
-  # return
-  if(order) { # ordered
-    return(dplyr::arrange(ints, ..., {{ .x_start }}, {{ .x_end }}))
-  } else {
-    return(ints)
-  }
 }

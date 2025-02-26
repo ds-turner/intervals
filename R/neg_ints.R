@@ -43,54 +43,51 @@
 #'
 #' @export
 neg_ints <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1, pac_ints = FALSE) {
-
   has_lower <- !rlang::quo_is_null(rlang::enquo(.lower))
   has_upper <- !rlang::quo_is_null(rlang::enquo(.upper))
 
   # .lower and .upper must be the same per ID
 
   if (pac_ints) {
-    ints <- pac_ints(.data, ..., {{ .start }}, {{ .end }}, {{ .lower }}, {{ .upper }})
+    ints <- pac_ints(.data, ..., {{ .start }}, {{ .end }}, {{ .lower }}, {{ .upper }}, .gap = .gap)
   } else {
     ints <- dplyr::select(.data, ..., {{ .start }}, {{ .end }}, {{ .lower }}, {{ .upper }})
   }
 
-  ints <- ints |>
-    dplyr::mutate(
-      int_type = "pos"
-    )
-
   neg_ints <- get_neg_ints(.data, {{ .start }}, {{ .end }}, ..., .lower = {{ .lower }}, .upper = {{ .upper }}, .gap = .gap)
 
-  all_ints <- rbind(ints, neg_ints) |>
-    apply_bounds({{ .start }}, {{ .end }}, {{ .lower }}, {{ .upper }}, ...)
+  # early return for unbounded
+  if (!has_lower & !has_upper) {
+    return(dplyr::filter(neg_ints, end < Inf))
+  }
 
-  all_ints |>
-    dplyr::arrange(..., {{ .start }}, dplyr::desc({{ .end }}))
+  neg_ints_bounded <- apply_bounds(neg_ints, {{ .start }}, {{ .end }}, {{ .lower }}, {{ .upper }}, ...)
+
+  return(
+    dplyr::arrange(neg_ints_bounded, ..., {{ .start }}, dplyr::desc({{ .end }}))
+  )
 }
 
 
 # Helper functions --------------------------------------------------------
 
 get_neg_ints <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1) {
-
   has_lower <- !rlang::quo_is_null(rlang::enquo(.lower))
 
   neg_ints <- .data |>
     dplyr::mutate(
       neg_start = {{ .end }} + .gap,
       neg_end = dplyr::lead({{ .start }} - .gap, default = Inf),
-      int_type = "neg",
       .by = c(...)
     )
 
-  if (has_lower) {
 
+
+  if (has_lower) {
     prior_neg_ints <- .data |>
       dplyr::mutate(
         neg_start = dplyr::lag({{ .end }} + .gap, default = -Inf),
         neg_end = {{ .start }} - .gap,
-        int_type = "neg",
         .by = c(...)
       )
 
@@ -105,16 +102,16 @@ get_neg_ints <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL,
       "{{.start}}" := neg_start,
       "{{.end}}" := neg_end,
       {{ .lower }},
-      {{ .upper }},
-      int_type
-    )
+      {{ .upper }}
+    ) |>
+      dplyr::filter({{ .end }} >= {{ .start }})|>
+    dplyr::distinct()
 
   return(neg_ints)
 }
 
 
 apply_bounds <- function(ints, .start, .end, .lower, .upper, ...) {
-
   has_lower <- !rlang::quo_is_null(rlang::enquo(.lower))
   has_upper <- !rlang::quo_is_null(rlang::enquo(.upper))
 
@@ -122,7 +119,6 @@ apply_bounds <- function(ints, .start, .end, .lower, .upper, ...) {
 
   if (has_lower) {
     ints <- ints |>
-      dplyr::filter({{ .end }} >= {{ .lower }}) |>
       dplyr::mutate(
         "{{.start}}" := ifelse({{ .start }} == -Inf, {{ .lower }}, {{ .start }})
       )
@@ -130,17 +126,17 @@ apply_bounds <- function(ints, .start, .end, .lower, .upper, ...) {
 
   if (has_upper) {
     ints <- ints |>
-      dplyr::filter({{ .start }} <= {{ .upper }}) |>
       dplyr::mutate(
         "{{.end}}" := ifelse({{ .end }} == Inf, {{ .upper }}, {{ .end }})
       )
-
   }
 
   ints |>
     dplyr::filter(
+      {{ .end }} >= {{ .lower }},
+      {{ .start }} <= {{ .upper }},
       {{ .start }} != -Inf,
       {{ .end }} != Inf,
-      ) |>
+    ) |>
     dplyr::ungroup()
 }

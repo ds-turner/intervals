@@ -33,20 +33,17 @@
 #' @export
 grp_ints <- function(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id) {
 
-  grp_vars <- eval(substitute(alist(...)), envir = parent.frame())
-
   # create a data.table if
   if(!data.table::is.data.table(.data)) {
     .data <- data.table::as.data.table(.data)
   }
-
-
 
   .data <- .data[order(..., .start),env = list(
     .start = substitute(.start)
   )]
 
   # Step 2: Calculate cumulative max of 'end' and create id for overlapping intergers
+  grp_vars <- eval(substitute(alist(...)), envir = parent.frame())
   .data[ , .group_col := cumsum(cummax(shift(as.numeric(.end), fill = as.numeric(.end)[1])) < as.numeric(.start) - .gap), by = grp_vars,
        env = list(
          .group_col =  substitute(.group_col),

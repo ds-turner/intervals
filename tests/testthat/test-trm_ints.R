@@ -1,11 +1,13 @@
 # Chopping single intervals -----------------------------------------------
 ## Simple ----
-simple_x <- data.frame(
-  start = c(5),
-  end = c(10)
-)
+
 
 test_that("chop start", {
+
+  simple_x <- data.frame(
+    start = c(5),
+    end = c(10)
+  )
 
   y <- data.frame(
     start = c(3),
@@ -24,6 +26,11 @@ test_that("chop start", {
 
 test_that("chop end", {
 
+  simple_x <- data.frame(
+    start = c(5),
+    end = c(10)
+  )
+
   y <- data.frame(
     start = c(8),
     end = c(11)
@@ -40,6 +47,11 @@ test_that("chop end", {
 })
 
 test_that("chop middle", {
+
+  simple_x <- data.frame(
+    start = c(5),
+    end = c(10)
+  )
 
   y <- data.frame(
     start = c(7),
@@ -58,6 +70,11 @@ test_that("chop middle", {
 
 test_that("chop all", {
 
+  simple_x <- data.frame(
+    start = c(5),
+    end = c(10)
+  )
+
   y <- data.frame(
     start = c(5),
     end = c(11)
@@ -74,6 +91,11 @@ test_that("chop all", {
 })
 
 test_that("missed chop", {
+
+  simple_x <- data.frame(
+    start = c(5),
+    end = c(10)
+  )
 
   y <- data.frame(
     start = c(1,11),
@@ -93,6 +115,11 @@ test_that("missed chop", {
 ## chop both ends
 test_that("chop both ends", {
 
+  simple_x <- data.frame(
+    start = c(5),
+    end = c(10)
+  )
+
   y <- data.frame(
     start = c(1,9),
     end = c(6,15)
@@ -111,6 +138,11 @@ test_that("chop both ends", {
 
 ## chop 2 bits out of the middle - returns 3
 test_that("Chop 2 bits out of the middle", {
+
+  simple_x <- data.frame(
+    start = c(5),
+    end = c(10)
+  )
 
   y <- data.frame(
     start = c(6,8),
