@@ -43,100 +43,109 @@
 #'
 #' @export
 neg_ints <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1, pac_ints = FALSE) {
+
+  # create a data.table if
+  if(!data.table::is.data.table(.data)) {
+    .data <- data.table::as.data.table(.data)
+  }
+
+  eval(substitute(setorder(.data, ..., .start)))
+
   has_lower <- !rlang::quo_is_null(rlang::enquo(.lower))
   has_upper <- !rlang::quo_is_null(rlang::enquo(.upper))
 
-  # .lower and .upper must be the same per ID
-
-  if (pac_ints) {
-    ints <- pac_ints(.data, ..., {{ .start }}, {{ .end }}, {{ .lower }}, {{ .upper }}, .gap = .gap)
-  } else {
-    ints <- dplyr::select(.data, ..., {{ .start }}, {{ .end }}, {{ .lower }}, {{ .upper }})
-  }
-
-  neg_ints <- get_neg_ints(.data, {{ .start }}, {{ .end }}, ..., .lower = {{ .lower }}, .upper = {{ .upper }}, .gap = .gap)
+  neg_ints <- eval(substitute(get_neg_ints_dt(.data, .start, .end, ..., .lower = .lower, .upper = .upper, .gap = .gap)))
 
   # early return for unbounded
-  if (!has_lower & !has_upper) {
-    return(dplyr::filter(neg_ints, end < Inf))
+  if(!has_lower & !has_upper) {
+    return(neg_ints[.end != Inf & .start != -Inf, env = list(.start = substitute(.start), .end = substitute(.end))])
   }
 
-  neg_ints_bounded <- apply_bounds(neg_ints, {{ .start }}, {{ .end }}, {{ .lower }}, {{ .upper }}, ...)
+  neg_ints_bounded <- eval(substitute(apply_bounds_dt(neg_ints, .start, .end, .lower, .upper)))
 
-  return(
-    dplyr::arrange(neg_ints_bounded, ..., {{ .start }}, dplyr::desc({{ .end }}))
-  )
+  return(neg_ints_bounded)
+
 }
 
+# helper functions
+get_neg_ints_dt <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1) {
 
-# Helper functions --------------------------------------------------------
+  # Calculate prior negative intervals
+  grp_vars <- eval(substitute(alist(...)), envir = parent.frame())
+  .data[, let(neg_start = shift(.end + .gap, type = "lag", fill = -Inf), neg_end = .start - .gap), by = grp_vars,
+        env = list(
+          grp_vars = substitute(grp_vars),
+          .start = substitute(.start),
+          .end = substitute(.end)
+        )
+  ]
 
-get_neg_ints <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1) {
-  has_lower <- !rlang::quo_is_null(rlang::enquo(.lower))
+  # Calculate the last interval
+  last_int <- .data[, .SD[.N], by=grp_vars, env = list( grp_vars = substitute(grp_vars))]
+  last_int[, let(neg_start = .end + 1, neg_end = Inf), by = grp_vars,
+           env = list(
+             grp_vars = substitute(grp_vars),
+             .end = substitute(.end)
+           )]
 
-  neg_ints <- .data |>
-    dplyr::mutate(
-      neg_start = {{ .end }} + .gap,
-      neg_end = dplyr::lead({{ .start }} - .gap, default = Inf),
-      .by = c(...)
-    )
+  # Combine the results
+  r <- rbindlist(list(.data, last_int), use.names = TRUE, fill = TRUE)
 
+  # Select and arrange the final columns
+  r[, let(.start = neg_start, .end = neg_end, neg_start = NULL, neg_end = NULL),
+    env = list(
+      grp_vars = substitute(grp_vars),
+      .start = substitute(.start),
+      .end = substitute(.end)
+    )]
 
+  r <- r[.end >= .start, final_vars, env = list(
+    final_vars = eval(substitute(alist(..., .start, .end, .lower, .upper ))),
+    .start = substitute(.start),
+    .end = substitute(.end)
+  )]
 
-  if (has_lower) {
-    prior_neg_ints <- .data |>
-      dplyr::mutate(
-        neg_start = dplyr::lag({{ .end }} + .gap, default = -Inf),
-        neg_end = {{ .start }} - .gap,
-        .by = c(...)
-      )
+  eval(substitute(setorder(r, ..., .start)))
 
-    neg_ints <- rbind(neg_ints, prior_neg_ints) |>
-      dplyr::select(-{{ .start }}, -{{ .end }}) |>
-      dplyr::distinct()
-  }
-
-  neg_ints <- neg_ints |>
-    dplyr::select(
-      ...,
-      "{{.start}}" := neg_start,
-      "{{.end}}" := neg_end,
-      {{ .lower }},
-      {{ .upper }}
-    ) |>
-      dplyr::filter({{ .end }} >= {{ .start }})|>
-    dplyr::distinct()
-
-  return(neg_ints)
+  return(r[])
 }
 
+apply_bounds_dt <- function(ints, .start, .end, .lower, .upper) {
 
-apply_bounds <- function(ints, .start, .end, .lower, .upper, ...) {
   has_lower <- !rlang::quo_is_null(rlang::enquo(.lower))
   has_upper <- !rlang::quo_is_null(rlang::enquo(.upper))
 
-  ints <- dplyr::group_by(ints, ...)
+  if(has_lower) {
 
-  if (has_lower) {
-    ints <- ints |>
-      dplyr::mutate(
-        "{{.start}}" := ifelse({{ .start }} == -Inf, {{ .lower }}, {{ .start }})
-      )
+    ints <- ints[.end >= .lower,
+                 env = list(
+                   .lower = substitute(.lower),
+                   .end = substitute(.end)
+                 )]
+
+    ints[, .start := fifelse(.start == -Inf, .lower, .start),
+         env = list(
+           .start = substitute(.start),
+           .lower = substitute(.lower)
+         )]
   }
 
-  if (has_upper) {
-    ints <- ints |>
-      dplyr::mutate(
-        "{{.end}}" := ifelse({{ .end }} == Inf, {{ .upper }}, {{ .end }})
-      )
+  if(has_upper) {
+    ints <- ints[.start <= .upper,
+                 env = list(
+                   .start = substitute(.start),
+                   .upper = substitute(.upper)
+                 )]
+    ints[, .end := fifelse(.end == Inf, .upper, .end),
+         env = list(
+           .end = substitute(.end),
+           .upper = substitute(.upper)
+         )]
   }
 
-  ints |>
-    dplyr::filter(
-      {{ .end }} >= {{ .lower }},
-      {{ .start }} <= {{ .upper }},
-      {{ .start }} != -Inf,
-      {{ .end }} != Inf,
-    ) |>
-    dplyr::ungroup()
+  return(ints[.end != Inf & .start != -Inf,
+              env = list(
+                .start = substitute(.start),
+                .end = substitute(.end)
+              )][])
 }

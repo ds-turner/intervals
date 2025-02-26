@@ -6,7 +6,7 @@
 \alias{intervals-package}
 \title{intervals: What the Package Does (One Line, Title Case)}
 \description{
-What the package does (one paragraph).
+Functions for handling intervals. The primary functions are `grp_ints` and `pac_ints`, which group overlapping or continuous intervals and merge the overlapping intervals, respectively.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com}
+\strong{Maintainer}: David Turner \email{david.samuel.turner@gmail.com.com}
 
 }
 \keyword{internal}
