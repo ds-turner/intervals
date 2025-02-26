@@ -20,8 +20,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(dplyr)
-#' data <- tibble(
+#' data <- data.frame(
 #'   id = 1:5,
 #'   start = c(1, 2, 5, 10, 12),
 #'   end = c(3, 4, 7, 11, 14)

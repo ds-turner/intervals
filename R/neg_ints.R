@@ -14,8 +14,7 @@
 #' @param .upper (Optional) The column name or value representing the upper bound for the intervals.
 #'   If `NULL`, no upper bound is applied.
 #' @param .gap (Optional) The size of the gap between intervals. Default is `1`.
-#' @param pac_ints (Optional) A logical value indicating whether to use `pac_ints` for interval calculation.
-#'   If `FALSE`, the function uses `dplyr::select` to extract relevant columns. Default is `FALSE`.
+#' @param pac_ints (Optional) A logical value indicating whether to use `pac_ints` for interval calculation. Default is `FALSE`.
 #'
 #' @return A data frame or tibble containing both positive and negative intervals, with columns for
 #'   start, end, lower bound, upper bound, and interval type (`int_type`).

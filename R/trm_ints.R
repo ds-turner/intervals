@@ -25,15 +25,13 @@
 #' - If `order = TRUE`, the resulting intervals are ordered by start and end points.
 #'
 #' @examples
-#' library(dplyr)
-#'
-#' x <- tibble(
+#' x <- data.frame(
 #'   id = c(1, 1, 2, 2),
 #'   start = c(1, 5, 2, 6),
 #'   end = c(4, 8, 5, 9)
 #' )
 #'
-#' y <- tibble(
+#' y <- data.frame(
 #'   id = c(1, 2),
 #'   start = c(2, 4),
 #'   end = c(6, 7)

@@ -234,22 +234,27 @@ test_that("Dates", {
     id = c(1:pats),
     start = rep(5, pats),
     end = rep(20, pats)
-  ) |>
-    dplyr::mutate(across(c(start, end), as.Date))
+  )
+  x$start <- as.Date(x$start)
+  x$end <- as.Date(x$end)
 
   y <- data.frame(
     id = c(1, 2, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7),
     start = c(10, 4, 4, 19, 4, 10, 19, 4, 9, 14, 19, 7, 9,  11, 13),
     end = c(15, 21, 6, 21, 6, 15, 21, 6, 11, 16, 21, 8, 10, 12, 18)
-  ) |>
-    dplyr::mutate(across(c(start, end), as.Date))
+  )
+
+  y$start <- as.Date(y$start)
+  y$end <- as.Date(y$end)
 
   exp <- data.frame(
     id = c(1, 1, 3, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7),
     start = c(5, 15, 6, 5, 6, 15, 6, 11, 16, 5, 8, 10, 12, 18),
     end = c(10, 20, 20, 19, 10, 19, 9, 14, 19, 7, 9, 11, 13, 20)
-    ) |>
-    dplyr::mutate(across(c(start, end), as.Date))
+    )
+
+  exp$start <- as.Date(exp$start)
+  exp$end <- as.Date(exp$end)
 
   act <- trm_ints(x, y, start, end, start, end, id)
 
@@ -266,22 +271,26 @@ test_that("Date Time", {
     id = c(1:pats),
     start = rep(5, pats),
     end = rep(20, pats)
-  ) |>
-    dplyr::mutate(across(c(start, end), as.POSIXct))
+  )
 
   y <- data.frame(
     id = c(1, 2, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7),
     start = c(10, 4, 4, 19, 4, 10, 19, 4, 9, 14, 19, 7, 9,  11, 13),
     end = c(15, 21, 6, 21, 6, 15, 21, 6, 11, 16, 21, 8, 10, 12, 18)
-  ) |>
-    dplyr::mutate(across(c(start, end), as.POSIXct))
+  )
 
   exp <- data.frame(
     id = c(1, 1, 3, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 7),
     start = c(5, 15, 6, 5, 6, 15, 6, 11, 16, 5, 8, 10, 12, 18),
     end = c(10, 20, 20, 19, 10, 19, 9, 14, 19, 7, 9, 11, 13, 20)
-  ) |>
-    dplyr::mutate(across(c(start, end), as.POSIXct))
+  )
+
+  x$start <- as.Date(x$start)
+  x$end <- as.Date(x$end)
+  y$start <- as.Date(y$start)
+  y$end <- as.Date(y$end)
+  exp$start <- as.Date(exp$start)
+  exp$end <- as.Date(exp$end)
 
   act <- trm_ints(x, y, start, end, start, end, id)
 

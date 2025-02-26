@@ -32,8 +32,7 @@ If \code{NULL}, no upper bound is applied.}
 
 \item{.gap}{(Optional) The size of the gap between intervals. Default is \code{1}.}
 
-\item{pac_ints}{(Optional) A logical value indicating whether to use \code{pac_ints} for interval calculation.
-If \code{FALSE}, the function uses \code{dplyr::select} to extract relevant columns. Default is \code{FALSE}.}
+\item{pac_ints}{(Optional) A logical value indicating whether to use \code{pac_ints} for interval calculation. Default is \code{FALSE}.}
 }
 \value{
 A data frame or tibble containing both positive and negative intervals, with columns for

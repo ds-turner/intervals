@@ -308,3 +308,37 @@ test_that("no bounds", {
 # Gap testing -------------------------------------------------------------
 
 
+# dates -------------------------------------------------------------------
+
+test_that("dates", {
+
+  ints <- data.frame(
+    id = c("a", "a", "a", "a", "a", "b", "b", "c", "c", "c", "c", "d"),
+    start = c(1, 4, 10, 18, 23, 7, 12, 1, 7, 12, 23, 10),
+    end = c(3, 7, 15, 21, 25, 9, 16, 3, 9, 16, 25, 15),
+    lower = c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5),
+    upper = c(20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20)
+  )
+
+  ints$start <- as.Date(ints$start)
+  ints$end <- as.Date(ints$end)
+  ints$lower <- as.Date(ints$lower)
+  ints$upper <- as.Date(ints$upper)
+
+  act <- neg_ints(ints, start, end, id, .lower = lower, .upper = upper)
+
+  exp <- data.frame(
+    id = c("a", "a", "b", "b", "b", "c", "c", "c",  "d", "d"),
+    start = c(8, 16, 5, 10, 17, 4, 10, 17, 5, 16),
+    end = c(9, 17, 6, 11, 20, 6, 11, 22, 9, 20),
+    lower = c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5),
+    upper = c(20, 20, 20, 20, 20, 20, 20, 20, 20, 20)
+  )
+
+  exp$start <- as.Date(exp$start)
+  exp$end <- as.Date(exp$end)
+  exp$lower <- as.Date(exp$lower)
+  exp$upper <- as.Date(exp$upper)
+
+  expect_equal(act, exp, ignore_attr = TRUE)
+})
