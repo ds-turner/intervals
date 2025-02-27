@@ -9,7 +9,7 @@ test_that("Basic functionality with a gap of 1", {
     end = c(3, 4, 7, 11, 14)
   )
 
-  result <- pac_ints(test_data, start, end, .gap = 1)
+  result <- merge_ints(test_data, start, end, .gap = 1)
   expected <- data.frame(
     int_grp_id = c(1, 2),
     start = c(1, 10),
@@ -26,7 +26,7 @@ test_that("Custom group column name", {
     end = c(3, 4, 7, 11, 14)
   )
 
-  result <- pac_ints(test_data, start, end, .gap = 1, .group_col = group_id)
+  result <- merge_ints(test_data, start, end, .gap = 1, .group_col = group_id)
   expect_true("group_id" %in% colnames(result))
   expect_false("int_grp_id" %in% colnames(result))
 })
@@ -40,7 +40,7 @@ test_that("overlapping intervals with a gap of 0", {
     end = c(3, 4, 7, 11, 14)
   )
 
-  result <- pac_ints(test_data, start, end, .gap = 0)
+  result <- merge_ints(test_data, start, end, .gap = 0)
 
   expected <- data.frame(
     int_grp_id = c(1:4),
@@ -60,7 +60,7 @@ test_that("Grouping by additional columns", {
     end = c(3, 4, 7, 11, 14, 16)
   )
 
-  result <- pac_ints(multi_group_data, start, end, group, .gap = 0)
+  result <- merge_ints(multi_group_data, start, end, group, .gap = 0)
 
   expected <- data.frame(
     group = c("A", "A", "B", "B"),

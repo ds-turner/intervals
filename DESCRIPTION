@@ -3,7 +3,7 @@ Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
     person("David", "Turner", , "david.samuel.turner@gmail.com.com", role = c("aut", "cre"))
-Description: Functions for handling intervals.  The primary functions are `grp_ints` and `pac_ints`, which group overlapping or continuous intervals and merge the overlapping intervals, respectively.	
+Description: Functions for handling intervals.  The primary functions are `grp_ints` and `merge_ints`, which group overlapping or continuous intervals and merge the overlapping intervals, respectively.	
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

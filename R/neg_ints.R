@@ -29,7 +29,7 @@
 #'   negative (`"neg"`) intervals.
 #'
 #'@details
-#' If `.data` contains overlapping intervals you may get unexpected results.  Please use `pac_ints` if required.
+#' If `.data` contains overlapping intervals you may get unexpected results.  Please use `merge_ints` if required.
 #' @examples
 #'
 #' data <- data.frame(

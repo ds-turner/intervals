@@ -12,9 +12,9 @@ as remove parts of one set of intervals, based on another set of
 intervals. In this context an interval is defined as having a start and
 a stop. It can be numeric or date type.
 
-{intervals} is mostly written in
+{intervals} uses
 [`{data.table}`](https://rdatatable.gitlab.io/data.table/) for memory
-efficiency, it will always return a `data.table` object.
+efficiency and speed, it will always return a `data.table` object.
 
 ## Installation
 
@@ -31,10 +31,9 @@ pak::pak("ds-turner/intervals")
 library(intervals)
 ```
 
-### Grouping and Packing Intervals
+### Grouping and Merging Intervals
 
 ``` r
-
  ints <- data.frame(
     id = c("A", "A", "A", "B", "B", "B"),
     st = c(1, 2, 5, 10, 12, 14),
@@ -69,7 +68,7 @@ grp_ints(ints, st, end, id)
 We can also merge the overlapping intervels into single intervals.
 
 ``` r
-pac_ints(ints, st, end, id)
+merge_ints(ints, st, end, id)
 #>        id int_grp_id    st   end
 #>    <char>      <int> <num> <num>
 #> 1:      A          1     1     4
@@ -223,9 +222,8 @@ Then we can split up the intervals to make sure everything is mutually
 exclusive.
 
 ``` r
-
+# create a list contaiing each dose level
 trt_list <- split(trt, trt$dose_freq)
-
 
 # remove the parts of the week dosing periods that overlap with the daily dosing intervals
 trt_list$weekly <- trm_ints(
@@ -238,7 +236,7 @@ trt_list$weekly <- trm_ints(
   pat_id,
   .gap = 1
   )
-# remove the parts of the monthly dosing periods that overlap with the daily and weelky dosing intervals
+# remove the parts of the monthly dosing periods that overlap with the daily and weekly dosing intervals
 trt_list$monthly <- trm_ints(
   trt_list$monthly,
   rbind(trt_list$daily, trt_list$weekly),
@@ -253,7 +251,6 @@ trt_list$monthly <- trm_ints(
 trt2 <- data.table::rbindlist(
   trt_list
 )
-
 data.table::setorder(trt2, pat_id, trt_start_date)
 
 trt2
@@ -269,3 +266,7 @@ trt2
 #> 8:      2     2023-03-11   2023-03-14    weekly
 #> 9:      2     2023-03-15   2023-12-30   monthly
 ```
+
+## Keywords
+
+interval packing; interval merging; interval cutting;

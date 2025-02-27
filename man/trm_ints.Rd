@@ -36,7 +36,7 @@ It splits intervals in \code{x} at the boundaries of overlaps with \code{y}, rem
 returns the resulting intervals. Optionally, the output can be ordered by start and end points.
 }
 \details{
-If \code{x} and \code{y} contains overlapping intervals you may get unexpected results.  Please use \code{pac_ints} if required.
+If \code{x} and \code{y} contains overlapping intervals you may get unexpected results.  Please use \code{merge_ints} if required.
 }
 \examples{
 x <- data.frame(

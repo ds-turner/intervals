@@ -45,7 +45,7 @@ specified upper bound.
 negative (\code{"neg"}) intervals.
 }
 
-If \code{.data} contains overlapping intervals you may get unexpected results.  Please use \code{pac_ints} if required.
+If \code{.data} contains overlapping intervals you may get unexpected results.  Please use \code{merge_ints} if required.
 }
 \examples{
 

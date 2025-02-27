@@ -6,7 +6,7 @@
 \alias{intervals-package}
 \title{intervals: What the Package Does (One Line, Title Case)}
 \description{
-Functions for handling intervals. The primary functions are `grp_ints` and `pac_ints`, which group overlapping or continuous intervals and merge the overlapping intervals, respectively.
+Functions for handling intervals. The primary functions are `grp_ints` and `merge_ints`, which group overlapping or continuous intervals and merge the overlapping intervals, respectively.
 }
 \seealso{
 Useful links:

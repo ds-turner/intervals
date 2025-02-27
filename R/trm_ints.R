@@ -19,7 +19,7 @@
 #'   and any grouping variables.
 #'
 #' @details
-#' If `x` and `y` contains overlapping intervals you may get unexpected results.  Please use `pac_ints` if required.
+#' If `x` and `y` contains overlapping intervals you may get unexpected results.  Please use `merge_ints` if required.
 #'
 #' @examples
 #' x <- data.frame(
