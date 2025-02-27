@@ -1,5 +1,5 @@
 Package: ints
-Title: What the Package Does (One Line, Title Case)
+Title: Help With Overlapping Intervals
 Version: 0.0.0.9000
 Authors@R: 
     person("David", "Turner", , "david.samuel.turner@gmail.com.com", role = c("aut", "cre"))
