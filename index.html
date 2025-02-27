@@ -133,7 +133,7 @@
 <span><span class="co">#&gt; 4      2     2023-03-02   2023-03-10     daily</span></span>
 <span><span class="co">#&gt; 5      2     2023-03-05   2023-03-15    weekly</span></span>
 <span><span class="co">#&gt; 6      2     2023-01-01   2023-12-31   monthly</span></span></code></pre></div>
-<p>Here we split up the intervals to make sure everything is mutually exclusive.</p>
+<p>Then we can split up the intervals to make sure everything is mutually exclusive.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create a list contaiing each dose level</span></span>
 <span><span class="va">trt_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">trt</span><span class="op">$</span><span class="va">dose_freq</span><span class="op">)</span></span>
