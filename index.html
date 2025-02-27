@@ -50,7 +50,7 @@
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p><a href="ds-turner.github.io/ints/"><code>{ints}</code></a> helps users tidy up messy ints. It can group and merge overlapping ints as well as remove parts of one set of ints, based on another set of ints. In this context an interval is defined as having a start and a stop. It can be numeric or date type.</p>
+<p><a href="ds-turner.github.io/ints/"><code>{ints}</code></a> helps users tidy up messy intervals. It can group and merge overlapping intervals as well as remove parts of one set of intervals, based on another set of intervals. In this context an interval is defined as having a start and a stop. It can be numeric or date type.</p>
 <p><a href="https://github.com/ds-turner/ints" class="external-link">ints</a> uses <a href="https://rdatatable.gitlab.io/data.table/" class="external-link"><code>{data.table}</code></a> for memory efficiency and speed, it will always return a <code>data.table</code> object.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -81,7 +81,7 @@
 <span><span class="co">#&gt; 4  B 10  11</span></span>
 <span><span class="co">#&gt; 5  B 12  14</span></span>
 <span><span class="co">#&gt; 6  B 14  16</span></span></code></pre></div>
-<p><code>ints</code> is a set of overlapping intervals. We can identify the overlapping ints and add an ID column <code>int_grp_id</code> for overlapping groups.</p>
+<p><code>ints</code> is a set of overlapping intervals. We can identify the overlapping intervals and add an ID column <code>int_grp_id</code> for overlapping groups.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/grp_ints.html">grp_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">st</span>, <span class="va">end</span>, <span class="va">id</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        id    st   end int_grp_id</span></span>
