@@ -12,6 +12,7 @@ Functions for handling intervals. The primary functions are `grp_ints` and `merg
 Useful links:
 \itemize{
   \item \url{https://github.com/ds-turner/intervals}
+  \item \url{https://ds-turner.github.io/intervals/}
   \item Report bugs at \url{https://github.com/ds-turner/intervals/issues}
 }
 
