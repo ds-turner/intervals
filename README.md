@@ -6,11 +6,11 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-`{intervals}` helps users tidy up messy intervals. It can group and
-merge overlapping intervals as well as remove parts of one set of
-intervals, based on another set of intervals. In this context an
-interval is defined as having a start and a stop. It can be numeric or
-date type.
+[`{intervals}`](https://github.com/ds-turner/intervals) helps users tidy
+up messy intervals. It can group and merge overlapping intervals as well
+as remove parts of one set of intervals, based on another set of
+intervals. In this context an interval is defined as having a start and
+a stop. It can be numeric or date type.
 
 {intervals} is mostly written in
 [`{data.table}`](https://rdatatable.gitlab.io/data.table/) for memory
@@ -22,7 +22,6 @@ You can install the development version of intervals from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("pak")
 pak::pak("ds-turner/intervals")
 ```
 
@@ -30,7 +29,6 @@ pak::pak("ds-turner/intervals")
 
 ``` r
 library(intervals)
-# library(data.table)
 ```
 
 ### Grouping and Packing Intervals
@@ -194,19 +192,19 @@ considered as being dosed monthly if there is a record of weekly dosing.
 
 ``` r
 trt <- data.frame(
-  pat_id = c(1, 1, 1, 1,
+  pat_id = c(1, 1, 1,
              2, 2, 2
              ),
   trt_start_date = as.Date(c(
-    "2023-07-13", "2023-06-05", "2023-07-01", "2023-01-01",
+    "2023-07-13", "2023-06-05", "2023-01-01",
     "2023-03-02", "2023-03-05", "2023-01-01"
   )),
   trt_end_date = as.Date(c(
-    "2023-07-20", "2023-08-15", "2023-10-13", "2023-12-31",
+    "2023-07-20", "2023-08-15", "2023-12-31",
     "2023-03-10", "2023-03-15", "2023-12-31"
   )),
   dose_freq = c(
-    "daily", "weekly",  "monthly", "monthly",
+    "daily", "weekly",  "monthly",
     "daily", "weekly", "monthly"
   )
 )
@@ -215,77 +213,59 @@ trt
 #>   pat_id trt_start_date trt_end_date dose_freq
 #> 1      1     2023-07-13   2023-07-20     daily
 #> 2      1     2023-06-05   2023-08-15    weekly
-#> 3      1     2023-07-01   2023-10-13   monthly
-#> 4      1     2023-01-01   2023-12-31   monthly
-#> 5      2     2023-03-02   2023-03-10     daily
-#> 6      2     2023-03-05   2023-03-15    weekly
-#> 7      2     2023-01-01   2023-12-31   monthly
-```
-
-we can see that there is some overlapping so first we will merge the
-overlapping intervals together and tidy up a bit
-
-``` r
-trt <- pac_ints(trt, trt_start_date, trt_end_date, pat_id, dose_freq, .gap = 1)
-trt[, int_grp_id := NULL] # drop the grouping ID from `pac_ints`
-setorder(trt, pat_id, trt_start_date) # order for ease of review
-trt
-#>    pat_id dose_freq trt_start_date trt_end_date
-#>     <num>    <char>         <Date>       <Date>
-#> 1:      1   monthly     2023-01-01   2023-12-31
-#> 2:      1    weekly     2023-06-05   2023-08-15
-#> 3:      1     daily     2023-07-13   2023-07-20
-#> 4:      2   monthly     2023-01-01   2023-12-31
-#> 5:      2     daily     2023-03-02   2023-03-10
-#> 6:      2    weekly     2023-03-05   2023-03-15
-class(trt)
-#> [1] "data.table" "data.frame"
+#> 3      1     2023-01-01   2023-12-31   monthly
+#> 4      2     2023-03-02   2023-03-10     daily
+#> 5      2     2023-03-05   2023-03-15    weekly
+#> 6      2     2023-01-01   2023-12-31   monthly
 ```
 
 Then we can split up the intervals to make sure everything is mutually
-exclusive
+exclusive.
 
 ``` r
-daily <- trt[dose_freq == "daily"]
-weekly <- trt[dose_freq == "weekly"]
-monthly <- trt[dose_freq == "monthly"]
 
-weekly
-#>    pat_id dose_freq trt_start_date trt_end_date
-#>     <num>    <char>         <Date>       <Date>
-#> 1:      1    weekly     2023-06-05   2023-08-15
-#> 2:      2    weekly     2023-03-05   2023-03-15
-# # remove the parts of the week dosing periods that overlap with the daily dosing intervals
-# weekly <- trm_ints(
-#   weekly,
-#   daily,
-#   trt_start_date,
-#   trt_end_date,
-#   trt_start_date,
-#   trt_end_date,
-#   pat_id,
-#   .gap = 1
-#   )
-# # remove the parts of the monthly dosing periods that overlap with the daily and weelky dosing intervals
-# monthly <- trm_ints(
-#   monthly,
-#   rbind(daily, weekly),
-#   trt_start_date,
-#   trt_end_date,
-#   trt_start_date,
-#   trt_end_date,
-#   pat_id,
-#   .gap = 1
-#   )
-# 
-# trt2 <- rbindlist(
-#   list(
-#     trt[dose_freq == "daily"],
-#     weekly,
-#     monthly
-#   )
-# )
-# setorder(trt2, pat_id, trt_start_date)
-# 
-# trt2
+trt_list <- split(trt, trt$dose_freq)
+
+
+# remove the parts of the week dosing periods that overlap with the daily dosing intervals
+trt_list$weekly <- trm_ints(
+  trt_list$weekly,
+  trt_list$daily,
+  trt_start_date,
+  trt_end_date,
+  trt_start_date,
+  trt_end_date,
+  pat_id,
+  .gap = 1
+  )
+# remove the parts of the monthly dosing periods that overlap with the daily and weelky dosing intervals
+trt_list$monthly <- trm_ints(
+  trt_list$monthly,
+  rbind(trt_list$daily, trt_list$weekly),
+  trt_start_date,
+  trt_end_date,
+  trt_start_date,
+  trt_end_date,
+  pat_id,
+  .gap = 1
+  )
+
+trt2 <- data.table::rbindlist(
+  trt_list
+)
+
+data.table::setorder(trt2, pat_id, trt_start_date)
+
+trt2
+#>    pat_id trt_start_date trt_end_date dose_freq
+#>     <num>         <Date>       <Date>    <char>
+#> 1:      1     2023-01-02   2023-06-05   monthly
+#> 2:      1     2023-06-06   2023-07-12    weekly
+#> 3:      1     2023-07-13   2023-07-20     daily
+#> 4:      1     2023-07-21   2023-08-14    weekly
+#> 5:      1     2023-08-15   2023-12-30   monthly
+#> 6:      2     2023-01-02   2023-03-01   monthly
+#> 7:      2     2023-03-02   2023-03-10     daily
+#> 8:      2     2023-03-11   2023-03-14    weekly
+#> 9:      2     2023-03-15   2023-12-30   monthly
 ```
