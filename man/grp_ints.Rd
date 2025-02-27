@@ -9,25 +9,25 @@ grp_ints(.data, .start, .end, ..., .gap = 1, .group_col = int_grp_id)
 \arguments{
 \item{.data}{A data frame containing the interval data.}
 
-\item{.start}{The column name (unquoted) representing the start of the intervals.}
+\item{.start}{The column name (unquoted) representing the start of the ints.}
 
-\item{.end}{The column name (unquoted) representing the end of the intervals.}
+\item{.end}{The column name (unquoted) representing the end of the ints.}
 
-\item{...}{Additional columns to group by before identifying overlapping intervals.}
+\item{...}{Additional columns to group by before identifying overlapping ints.}
 
-\item{.gap}{The maximum allowed gap between intervals for them to be considered overlapping.
+\item{.gap}{The maximum allowed gap between ints for them to be considered overlapping.
 Intervals are grouped if the start of one interval is less than or equal to
 the end of the previous interval plus the gap. Default is 1.}
 
-\item{.group_col}{The name of the column that will indicate the group ID for overlapping intervals.  Default is \code{int_grp_id}.}
+\item{.group_col}{The name of the column that will indicate the group ID for overlapping ints.  Default is \code{int_grp_id}.}
 }
 \value{
 A \code{data.table} with the original data and an additional column indicating
-the group ID for overlapping intervals (the \code{.group_id} column).
+the group ID for overlapping ints (the \code{.group_id} column).
 }
 \description{
-This function groups overlapping intervals based on its start and end.
-It assigns a unique group ID to each set of overlapping intervals.
+This function groups overlapping ints based on its start and end.
+It assigns a unique group ID to each set of overlapping ints.
 Intervals are considered overlapping if the start of one interval is within the gap
 threshold of the end of another interval.
 }
@@ -39,7 +39,7 @@ data <- data.frame(
   end = c(3, 4, 7, 11, 14)
 )
 
-# Group intervals with a gap of 1
+# Group ints with a gap of 1
 grp_ints(data, start, end, .gap = 1)
 }
 

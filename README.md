@@ -1,34 +1,34 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# intervals
+# ints
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-[`{intervals}`](https://github.com/ds-turner/intervals) helps users tidy
-up messy intervals. It can group and merge overlapping intervals as well
-as remove parts of one set of intervals, based on another set of
-intervals. In this context an interval is defined as having a start and
-a stop. It can be numeric or date type.
+[`{ints}`](https://github.com/ds-turner/ints) helps users tidy up messy
+ints. It can group and merge overlapping ints as well as remove parts of
+one set of ints, based on another set of ints. In this context an
+interval is defined as having a start and a stop. It can be numeric or
+date type.
 
-{intervals} uses
-[`{data.table}`](https://rdatatable.gitlab.io/data.table/) for memory
-efficiency and speed, it will always return a `data.table` object.
+{ints} uses [`{data.table}`](https://rdatatable.gitlab.io/data.table/)
+for memory efficiency and speed, it will always return a `data.table`
+object.
 
 ## Installation
 
-You can install the development version of intervals from
+You can install the development version of ints from
 [GitHub](https://github.com/) with:
 
 ``` r
-pak::pak("ds-turner/intervals")
+pak::pak("ds-turner/ints")
 ```
 
 ## Useage
 
 ``` r
-library(intervals)
+library(ints)
 ```
 
 ### Grouping and Merging Intervals
@@ -50,7 +50,7 @@ library(intervals)
 ```
 
 `ints` is a set of overlapping intrevals. We can identify the
-overlapping intervals and add an ID column `int_grp_id` for overlapping
+overlapping ints and add an ID column `int_grp_id` for overlapping
 groups.
 
 ``` r
@@ -65,7 +65,7 @@ grp_ints(ints, st, end, id)
 #> 6:      B    14    16          2
 ```
 
-We can also merge the overlapping intervels into single intervals.
+We can also merge the overlapping intervels into single ints.
 
 ``` r
 merge_ints(ints, st, end, id)
@@ -79,7 +79,7 @@ merge_ints(ints, st, end, id)
 
 ### Triming Intervals
 
-You can remove parts of intervals based on another set of intervals.
+You can remove parts of ints based on another set of ints.
 
 ``` r
 pats <- 7
@@ -97,8 +97,8 @@ y <- data.frame(
 )
 ```
 
-Here we will remove the parts of the intervals in x that overlap with
-the intervals in y.
+Here we will remove the parts of the ints in x that overlap with the
+ints in y.
 
 ``` r
 trm_ints(x, y, start, end, start, end, id)
@@ -146,8 +146,8 @@ ints
 #> 12  d    10  15     5        20
 ```
 
-We can also create a set of intervals that represent the gaps between
-the given intervals.
+We can also create a set of ints that represent the gaps between the
+given ints.
 
 ``` r
 neg_ints(ints, start, end, id)
@@ -162,7 +162,7 @@ neg_ints(ints, start, end, id)
 #> 7:      c    17    22
 ```
 
-These intervals can have an upper and lower bounds if required
+These ints can have an upper and lower bounds if required
 
 ``` r
 neg_ints(ints, start, end, id, .lower = index, .upper = study_end)
@@ -218,14 +218,14 @@ trt
 #> 6      2     2023-01-01   2023-12-31   monthly
 ```
 
-Then we can split up the intervals to make sure everything is mutually
+Then we can split up the ints to make sure everything is mutually
 exclusive.
 
 ``` r
 # create a list contaiing each dose level
 trt_list <- split(trt, trt$dose_freq)
 
-# remove the parts of the week dosing periods that overlap with the daily dosing intervals
+# remove the parts of the week dosing periods that overlap with the daily dosing ints
 trt_list$weekly <- trm_ints(
   trt_list$weekly,
   trt_list$daily,
@@ -236,7 +236,7 @@ trt_list$weekly <- trm_ints(
   pat_id,
   .gap = 1
   )
-# remove the parts of the monthly dosing periods that overlap with the daily and weekly dosing intervals
+# remove the parts of the monthly dosing periods that overlap with the daily and weekly dosing ints
 trt_list$monthly <- trm_ints(
   trt_list$monthly,
   rbind(trt_list$daily, trt_list$weekly),

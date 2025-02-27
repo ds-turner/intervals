@@ -1,4 +1,4 @@
-# Chopping single intervals -----------------------------------------------
+# Chopping single ints -----------------------------------------------
 ## Simple ----
 
 
@@ -220,7 +220,7 @@ test_that("mutiple ids", {
 # Edge cases --------------------------------------------------------------
 
 
-# really close intervals
+# really close ints
 # overlapping x
 # overlapping y
 

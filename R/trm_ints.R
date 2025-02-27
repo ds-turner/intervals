@@ -1,25 +1,25 @@
 #' Trim Intervals Based on Overlaps
 #'
-#' The `trm_ints` function trims intervals in dataset `x` based on overlaps with intervals in dataset `y`.
-#' It splits intervals in `x` at the boundaries of overlaps with `y`, removes unwanted intervals, and
-#' returns the resulting intervals. Optionally, the output can be ordered by start and end points.
+#' The `trm_ints` function trims ints in dataset `x` based on overlaps with ints in dataset `y`.
+#' It splits ints in `x` at the boundaries of overlaps with `y`, removes unwanted ints, and
+#' returns the resulting ints. Optionally, the output can be ordered by start and end points.
 #'
-#' @param x A data frame containing the primary intervals to be trimmed.
-#' @param y A data frame containing the intervals used to trim `x`.
-#' @param .x_start The column name in `x` representing the start of the intervals.
-#' @param .x_end The column name in `x` representing the end of the intervals.
-#' @param .y_start The column name in `y` representing the start of the intervals.
-#' @param .y_end The column name in `y` representing the end of the intervals.
-#' @param ... Additional columns to group by when calculating overlaps and trimming intervals.
-#' @param .gap The gaps left when intervals are trimmed. Default is 0.
-#' @param order A logical value indicating whether to order the resulting intervals by start and end points.
+#' @param x A data frame containing the primary ints to be trimmed.
+#' @param y A data frame containing the ints used to trim `x`.
+#' @param .x_start The column name in `x` representing the start of the ints.
+#' @param .x_end The column name in `x` representing the end of the ints.
+#' @param .y_start The column name in `y` representing the start of the ints.
+#' @param .y_end The column name in `y` representing the end of the ints.
+#' @param ... Additional columns to group by when calculating overlaps and trimming ints.
+#' @param .gap The gaps left when ints are trimmed. Default is 0.
+#' @param order A logical value indicating whether to order the resulting ints by start and end points.
 #'   Default is `TRUE`.
 #'
-#' @return A `data.table` containing the trimmed intervals from `x`, with columns for start, end,
+#' @return A `data.table` containing the trimmed ints from `x`, with columns for start, end,
 #'   and any grouping variables.
 #'
 #' @details
-#' If `x` and `y` contains overlapping intervals you may get unexpected results.  Please use `merge_ints` if required.
+#' If `x` and `y` contains overlapping ints you may get unexpected results.  Please use `merge_ints` if required.
 #'
 #' @examples
 #' x <- data.frame(
@@ -76,7 +76,7 @@ split_ints_dt <- function(x, y, .x_start, .x_end, .y_start, .y_end, ..., .gap) {
     )
   )
 
-  # create new intervals
+  # create new ints
   eval(substitute(setorder(points, point)))
   points[, let(.x_end = shift(point, type = "lead") - .gap, .x_start = point + .gap), by = grp_vars,
          env = list(
@@ -85,7 +85,7 @@ split_ints_dt <- function(x, y, .x_start, .x_end, .y_start, .y_end, ..., .gap) {
            grp_vars = eval(substitute(alist(...)))
          )]
 
-  # drop incomplete intervals and select cols
+  # drop incomplete ints and select cols
   points[!is.na(.x_end), vars,
          env = list(
            .x_end = substitute(.x_end),

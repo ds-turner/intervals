@@ -1,35 +1,35 @@
 #' Generate Negative Intervals Between Positive Intervals
 #'
-#' The `neg_ints` function calculates negative intervals (gaps) between positive intervals in a dataset.
-#' It is useful for identifying gaps in time-based or sequential data where intervals are defined by
+#' The `neg_ints` function calculates negative ints (gaps) between positive ints in a dataset.
+#' It is useful for identifying gaps in time-based or sequential data where ints are defined by
 #' start and end points. The function allows for the specification of lower and upper bounds, as well
-#' as a gap size between intervals.
+#' as a gap size between ints.
 #'
 #' @param .data A data frame or tibble containing the interval data.
-#' @param .start The column name in `.data` representing the start of the intervals.
-#' @param .end The column name in `.data` representing the end of the intervals.
-#' @param ... Additional columns to group by when calculating negative intervals.
-#' @param .lower (Optional) The column name or value representing the lower bound for the intervals.
+#' @param .start The column name in `.data` representing the start of the ints.
+#' @param .end The column name in `.data` representing the end of the ints.
+#' @param ... Additional columns to group by when calculating negative ints.
+#' @param .lower (Optional) The column name or value representing the lower bound for the ints.
 #'   If `NULL`, no lower bound is applied.
-#' @param .upper (Optional) The column name or value representing the upper bound for the intervals.
+#' @param .upper (Optional) The column name or value representing the upper bound for the ints.
 #'   If `NULL`, no upper bound is applied.
-#' @param .gap (Optional) The size of the gap between intervals. Default is `1`.
+#' @param .gap (Optional) The size of the gap between ints. Default is `1`.
 #'
-#' @return A data frame or tibble containing both positive and negative intervals, with columns for
+#' @return A data frame or tibble containing both positive and negative ints, with columns for
 #'   start, end, lower bound, upper bound, and interval type (`int_type`).
 #'
 #' @details
-#' - The function calculates negative intervals by identifying gaps between positive intervals in the dataset.
-#' - If `.lower` is provided, the function ensures that the negative intervals do not fall below the
+#' - The function calculates negative ints by identifying gaps between positive ints in the dataset.
+#' - If `.lower` is provided, the function ensures that the negative ints do not fall below the
 #'   specified lower bound.
-#' - If `.upper` is provided, the function ensures that the negative intervals do not exceed the
+#' - If `.upper` is provided, the function ensures that the negative ints do not exceed the
 #'   specified upper bound.
-#' - The function groups the data by the columns specified in `...` to calculate intervals within each group.
+#' - The function groups the data by the columns specified in `...` to calculate ints within each group.
 #' - The `int_type` column is added to the output to distinguish between positive (`"pos"`) and
-#'   negative (`"neg"`) intervals.
+#'   negative (`"neg"`) ints.
 #'
 #'@details
-#' If `.data` contains overlapping intervals you may get unexpected results.  Please use `merge_ints` if required.
+#' If `.data` contains overlapping ints you may get unexpected results.  Please use `merge_ints` if required.
 #' @examples
 #'
 #' data <- data.frame(
@@ -70,7 +70,7 @@ neg_ints <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .ga
 # helper functions
 get_neg_ints_dt <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1) {
 
-  # Calculate prior negative intervals
+  # Calculate prior negative ints
   grp_vars <- eval(substitute(alist(...)), envir = parent.frame())
   .data[, let(neg_start = shift(.end + .gap, type = "lag", fill = -Inf), neg_end = .start - .gap), by = grp_vars,
         env = list(

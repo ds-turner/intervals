@@ -7,36 +7,36 @@
 trm_ints(x, y, .x_start, .x_end, .y_start, .y_end, ..., .gap = 0, order = TRUE)
 }
 \arguments{
-\item{x}{A data frame containing the primary intervals to be trimmed.}
+\item{x}{A data frame containing the primary ints to be trimmed.}
 
-\item{y}{A data frame containing the intervals used to trim \code{x}.}
+\item{y}{A data frame containing the ints used to trim \code{x}.}
 
-\item{.x_start}{The column name in \code{x} representing the start of the intervals.}
+\item{.x_start}{The column name in \code{x} representing the start of the ints.}
 
-\item{.x_end}{The column name in \code{x} representing the end of the intervals.}
+\item{.x_end}{The column name in \code{x} representing the end of the ints.}
 
-\item{.y_start}{The column name in \code{y} representing the start of the intervals.}
+\item{.y_start}{The column name in \code{y} representing the start of the ints.}
 
-\item{.y_end}{The column name in \code{y} representing the end of the intervals.}
+\item{.y_end}{The column name in \code{y} representing the end of the ints.}
 
-\item{...}{Additional columns to group by when calculating overlaps and trimming intervals.}
+\item{...}{Additional columns to group by when calculating overlaps and trimming ints.}
 
-\item{.gap}{The gaps left when intervals are trimmed. Default is 0.}
+\item{.gap}{The gaps left when ints are trimmed. Default is 0.}
 
-\item{order}{A logical value indicating whether to order the resulting intervals by start and end points.
+\item{order}{A logical value indicating whether to order the resulting ints by start and end points.
 Default is \code{TRUE}.}
 }
 \value{
-A \code{data.table} containing the trimmed intervals from \code{x}, with columns for start, end,
+A \code{data.table} containing the trimmed ints from \code{x}, with columns for start, end,
 and any grouping variables.
 }
 \description{
-The \code{trm_ints} function trims intervals in dataset \code{x} based on overlaps with intervals in dataset \code{y}.
-It splits intervals in \code{x} at the boundaries of overlaps with \code{y}, removes unwanted intervals, and
-returns the resulting intervals. Optionally, the output can be ordered by start and end points.
+The \code{trm_ints} function trims ints in dataset \code{x} based on overlaps with ints in dataset \code{y}.
+It splits ints in \code{x} at the boundaries of overlaps with \code{y}, removes unwanted ints, and
+returns the resulting ints. Optionally, the output can be ordered by start and end points.
 }
 \details{
-If \code{x} and \code{y} contains overlapping intervals you may get unexpected results.  Please use \code{merge_ints} if required.
+If \code{x} and \code{y} contains overlapping ints you may get unexpected results.  Please use \code{merge_ints} if required.
 }
 \examples{
 x <- data.frame(

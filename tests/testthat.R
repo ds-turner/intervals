@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(intervals)
+library(ints)
 
-test_check("intervals")
+test_check("ints")

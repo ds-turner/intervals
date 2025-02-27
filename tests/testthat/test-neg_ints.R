@@ -81,7 +81,7 @@ test_that("Single interval, overlap both bounds", {
 
 
 # Mutiple Ints ------------------------------------------------------------
-test_that("2 intervals, within bounds ()", {
+test_that("2 ints, within bounds ()", {
 
   dat <- data.frame(
     start = c(3, 7),
@@ -161,7 +161,7 @@ test_that("Single interval, after the bounds", {
   expect_equal(act_b, ex_b, ignore_attr = TRUE)
 })
 
-test_that("2 intervals, either side of the bounds", {
+test_that("2 ints, either side of the bounds", {
 
   dat <- data.frame(
     start = c(1, 8),
@@ -298,9 +298,9 @@ test_that("no bounds", {
 
 
 # Edge cases --------------------------------------------------------------
-# single unit intervals
-# overlapping intervals
-# test_that("overlapping intervals", {
+# single unit ints
+# overlapping ints
+# test_that("overlapping ints", {
 #
 # })
 

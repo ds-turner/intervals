@@ -1,9 +1,9 @@
-Package: intervals
+Package: ints
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
     person("David", "Turner", , "david.samuel.turner@gmail.com.com", role = c("aut", "cre"))
-Description: Functions for handling intervals.  The primary functions are `grp_ints` and `merge_ints`, which group overlapping or continuous intervals and merge the overlapping intervals, respectively.	
+Description: Functions for handling ints.  The primary functions are `grp_ints` and `merge_ints`, which group overlapping or continuous ints and merge the overlapping ints, respectively.	
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -11,8 +11,8 @@ RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://github.com/ds-turner/intervals, https://ds-turner.github.io/intervals/
-BugReports: https://github.com/ds-turner/intervals/issues
+URL: https://github.com/ds-turner/ints, https://ds-turner.github.io/ints/
+BugReports: https://github.com/ds-turner/ints/issues
 Imports: 
     data.table,
     rlang (>= 1.1.5)

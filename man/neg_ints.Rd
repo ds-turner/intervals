@@ -9,43 +9,43 @@ neg_ints(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1)
 \arguments{
 \item{.data}{A data frame or tibble containing the interval data.}
 
-\item{.start}{The column name in \code{.data} representing the start of the intervals.}
+\item{.start}{The column name in \code{.data} representing the start of the ints.}
 
-\item{.end}{The column name in \code{.data} representing the end of the intervals.}
+\item{.end}{The column name in \code{.data} representing the end of the ints.}
 
-\item{...}{Additional columns to group by when calculating negative intervals.}
+\item{...}{Additional columns to group by when calculating negative ints.}
 
-\item{.lower}{(Optional) The column name or value representing the lower bound for the intervals.
+\item{.lower}{(Optional) The column name or value representing the lower bound for the ints.
 If \code{NULL}, no lower bound is applied.}
 
-\item{.upper}{(Optional) The column name or value representing the upper bound for the intervals.
+\item{.upper}{(Optional) The column name or value representing the upper bound for the ints.
 If \code{NULL}, no upper bound is applied.}
 
-\item{.gap}{(Optional) The size of the gap between intervals. Default is \code{1}.}
+\item{.gap}{(Optional) The size of the gap between ints. Default is \code{1}.}
 }
 \value{
-A data frame or tibble containing both positive and negative intervals, with columns for
+A data frame or tibble containing both positive and negative ints, with columns for
 start, end, lower bound, upper bound, and interval type (\code{int_type}).
 }
 \description{
-The \code{neg_ints} function calculates negative intervals (gaps) between positive intervals in a dataset.
-It is useful for identifying gaps in time-based or sequential data where intervals are defined by
+The \code{neg_ints} function calculates negative ints (gaps) between positive ints in a dataset.
+It is useful for identifying gaps in time-based or sequential data where ints are defined by
 start and end points. The function allows for the specification of lower and upper bounds, as well
-as a gap size between intervals.
+as a gap size between ints.
 }
 \details{
 \itemize{
-\item The function calculates negative intervals by identifying gaps between positive intervals in the dataset.
-\item If \code{.lower} is provided, the function ensures that the negative intervals do not fall below the
+\item The function calculates negative ints by identifying gaps between positive ints in the dataset.
+\item If \code{.lower} is provided, the function ensures that the negative ints do not fall below the
 specified lower bound.
-\item If \code{.upper} is provided, the function ensures that the negative intervals do not exceed the
+\item If \code{.upper} is provided, the function ensures that the negative ints do not exceed the
 specified upper bound.
-\item The function groups the data by the columns specified in \code{...} to calculate intervals within each group.
+\item The function groups the data by the columns specified in \code{...} to calculate ints within each group.
 \item The \code{int_type} column is added to the output to distinguish between positive (\code{"pos"}) and
-negative (\code{"neg"}) intervals.
+negative (\code{"neg"}) ints.
 }
 
-If \code{.data} contains overlapping intervals you may get unexpected results.  Please use \code{merge_ints} if required.
+If \code{.data} contains overlapping ints you may get unexpected results.  Please use \code{merge_ints} if required.
 }
 \examples{
 

@@ -9,27 +9,27 @@ merge_ints(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id)
 \arguments{
 \item{.data}{A data frame containing the interval data.}
 
-\item{.start}{The column name (unquoted) representing the start of the intervals.}
+\item{.start}{The column name (unquoted) representing the start of the ints.}
 
-\item{.end}{The column name (unquoted) representing the end of the intervals.}
+\item{.end}{The column name (unquoted) representing the end of the ints.}
 
-\item{...}{Additional columns to group by before identifying and merging intervals.}
+\item{...}{Additional columns to group by before identifying and merging ints.}
 
-\item{.gap}{The maximum allowed gap between intervals for them to be considered overlapping.
+\item{.gap}{The maximum allowed gap between ints for them to be considered overlapping.
 Intervals are grouped if the start of one interval is less than or equal to
 the end of the previous interval plus the gap.}
 
 \item{.group_col}{The name of the column to store the group IDs (default: \code{int_grp_id}).
-This column is used to group overlapping intervals.}
+This column is used to group overlapping ints.}
 }
 \value{
-A \code{data.table} with the summarized intervals. Each row represents a packed interval,
+A \code{data.table} with the summarized ints. Each row represents a packed interval,
 with the minimum start value, maximum end value, the grouping columns and the \code{.group_id} column.
 }
 \description{
-This function takes a dataset with intervals (defined by start and end columns) and groups
-overlapping intervals using \code{grp_ints}. It then summarizes the intervals by collapsing
-overlapping intervals into a single interval per group, with the minimum start and maximum end
+This function takes a dataset with ints (defined by start and end columns) and groups
+overlapping ints using \code{grp_ints}. It then summarizes the ints by collapsing
+overlapping ints into a single interval per group, with the minimum start and maximum end
 values for each group.
 }
 \examples{
@@ -40,10 +40,10 @@ data <- data.frame(
   end = c(3, 4, 7, 11, 14)
 )
 
-# Merge intervals with a gap of 1
+# Merge ints with a gap of 1
 merge_ints(data, start, end, .gap = 1)
 
-# Merge intervals with a custom group column name
+# Merge ints with a custom group column name
 merge_ints(data, start, end, .gap = 1, .group_col = "group_id")
 }
 

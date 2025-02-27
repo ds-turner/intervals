@@ -31,8 +31,8 @@ test_that("Custom group column name", {
   expect_false("int_grp_id" %in% colnames(result))
 })
 
-# Test 3: No overlapping intervals
-test_that("overlapping intervals with a gap of 0", {
+# Test 3: No overlapping ints
+test_that("overlapping ints with a gap of 0", {
 
   test_data <- data.frame(
     id = 1:5,
