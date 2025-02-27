@@ -6,11 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-[`{ints}`](ds-turner.github.io/ints/) helps users tidy up messy
-intervals. It can group and merge overlapping intervals as well as
-remove parts of one set of intervals, based on another set of intervals.
-In this context an interval is defined as having a start and a stop. It
-can be numeric or date type.
+[`{ints}`](ds-turner.github.io/ints/) helps to tidy up messy intervals.
+It can group and merge overlapping intervals as well as remove parts of
+intervals, based on other intervals.
 
 `{ints}` uses [`{data.table}`](https://rdatatable.gitlab.io/data.table/)
 for memory efficiency and speed, it will always return a `data.table`
@@ -33,6 +31,9 @@ library(ints)
 
 ### Grouping and Merging Intervals
 
+We can group overlapping intervals by using `grp_ints`. It returns the
+same data but add an id for intervlase that overlap
+
 ``` r
  ints <- data.frame(
     id = c("A", "A", "A", "B", "B", "B"),
@@ -49,10 +50,6 @@ library(ints)
 #> 6  B 14  16
 ```
 
-`ints` is a set of overlapping intervals. We can identify the
-overlapping intervals and add an ID column `int_grp_id` for overlapping
-groups.
-
 ``` r
 grp_ints(ints, st, end, id)
 #>        id    st   end int_grp_id
@@ -65,7 +62,9 @@ grp_ints(ints, st, end, id)
 #> 6:      B    14    16          2
 ```
 
-We can also merge the overlapping intervals into single intervals
+We can also merge overlapping intervals together using `merge_ints`. It
+will return the interval start and end, the interval group id and any
+grouping variables used.
 
 ``` r
 merge_ints(ints, st, end, id)
@@ -78,6 +77,9 @@ merge_ints(ints, st, end, id)
 ```
 
 ### Triming Intervals
+
+We can remove parts of intervals that overlap with intervals in another
+data frame.
 
 Below is an example of some treatment data. Each patient has a period
 monthly treatment for the duration of 2023. For our analysis we will
@@ -164,48 +166,10 @@ trt2
 #> 9:      2     2023-03-15   2023-12-30   monthly
 ```
 
-You can remove parts of intervals based on another set of intervals
-
-``` r
-pats <- 7
-
-x <- data.frame(
-  id = c(1:pats),
-  start = rep(5, pats),
-  end = rep(20, pats)
-)
-
-y <- data.frame(
-  id = c(1, 2, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7),
-  start = c(10, 4, 4, 19, 4, 10, 19, 4, 9, 14, 19, 7, 9, 11, 13),
-  end = c(15, 21, 6, 21, 6, 15, 21, 6, 11, 16, 21, 8, 10, 12, 18)
-)
-```
-
-Here we will remove the parts of the intervals in x that overlap with
-the intervals in y.
-
-``` r
-trm_ints(x, y, start, end, start, end, id)
-#>        id start   end
-#>     <int> <num> <num>
-#>  1:     1     5    10
-#>  2:     1    15    20
-#>  3:     3     6    20
-#>  4:     4     5    19
-#>  5:     5     6    10
-#>  6:     5    15    19
-#>  7:     6     6     9
-#>  8:     6    11    14
-#>  9:     6    16    19
-#> 10:     7     5     7
-#> 11:     7     8     9
-#> 12:     7    10    11
-#> 13:     7    12    13
-#> 14:     7    18    20
-```
-
 ### Negative Intervals
+
+We can also create a set of intervals that represent the gaps between
+the given intervals
 
 ``` r
 ints <- data.frame(
@@ -230,9 +194,6 @@ ints
 #> 11  c    23  25     5        20
 #> 12  d    10  15     5        20
 ```
-
-We can also create a set of intervals that represent the gaps between
-the given intervals
 
 ``` r
 neg_ints(ints, start, end, id)

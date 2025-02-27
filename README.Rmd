@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-[`{ints}`](ds-turner.github.io/ints/) helps users tidy up messy intervals. It can group and merge overlapping intervals as well as remove parts of one set of intervals, based on another set of intervals. In this context an interval is defined as having a start and a stop.  It can be numeric or date type.
+[`{ints}`](ds-turner.github.io/ints/) helps to tidy up messy intervals. It can group and merge overlapping intervals as well as remove parts of intervals, based on other intervals. 
 
 `{ints}` uses [`{data.table}`](https://rdatatable.gitlab.io/data.table/) for memory efficiency and speed, it will always return a `data.table` object. 
 
@@ -35,6 +35,8 @@ pak::pak("ds-turner/ints")
 library(ints)
 ```
 ### Grouping and Merging Intervals
+
+We can group overlapping intervals by using `grp_ints`.  It returns the same data but add an id for intervlase that overlap
 ```{r}
  ints <- data.frame(
     id = c("A", "A", "A", "B", "B", "B"),
@@ -44,15 +46,16 @@ library(ints)
  ints
 ```
 
-`ints` is a set of overlapping intervals.   We can identify the overlapping intervals and add an ID column `int_grp_id` for overlapping groups.
 ```{r}
 grp_ints(ints, st, end, id)
 ```
-We can also merge the overlapping intervals into single intervals
+We can also merge overlapping intervals together using `merge_ints`.  It will return the interval start and end, the interval group id and any grouping variables used.
 ```{r}
 merge_ints(ints, st, end, id)
 ```
 ### Triming Intervals
+
+We can remove parts of intervals that overlap with intervals in another data frame.
 
 Below is an example of some treatment data.  Each patient has a period monthly treatment for the duration of 2023.  For our analysis we will consider the different dose frequencies as mutually exclusive and hierarchical, i.e. a patient will not be considered as being dosed weekly if there is a record of daily dosing and a patient will not be considered as being dosed monthly if there is a record of weekly dosing.  
 ```{r}
@@ -113,29 +116,8 @@ data.table::setorder(trt2, pat_id, trt_start_date)
 trt2
 ```
 
-You can remove parts of intervals based on another set of intervals
-```{r}
-pats <- 7
-
-x <- data.frame(
-  id = c(1:pats),
-  start = rep(5, pats),
-  end = rep(20, pats)
-)
-
-y <- data.frame(
-  id = c(1, 2, 3, 4, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7),
-  start = c(10, 4, 4, 19, 4, 10, 19, 4, 9, 14, 19, 7, 9, 11, 13),
-  end = c(15, 21, 6, 21, 6, 15, 21, 6, 11, 16, 21, 8, 10, 12, 18)
-)
-```
-
-Here we will remove the parts of the intervals in x that overlap with the intervals in y.
-```{r}
-trm_ints(x, y, start, end, start, end, id)
-```
-
 ### Negative Intervals
+We can also create a set of intervals that represent the gaps between the given intervals
 ```{r}
 ints <- data.frame(
   id = c("a", "a", "a", "a", "a", "b", "b", "c",   "c", "c", "c", "d"),
@@ -146,7 +128,7 @@ ints <- data.frame(
 )
 ints
 ```
-We can also create a set of intervals that represent the gaps between the given intervals
+
 ```{r}
 neg_ints(ints, start, end, id)
 ```
@@ -154,7 +136,6 @@ These intervals can have an upper and lower bounds if required
 ```{r}
 neg_ints(ints, start, end, id, .lower = index, .upper = study_end)
 ```
-
 
 #### Keywords
 interval packing; interval merging; interval cutting;
