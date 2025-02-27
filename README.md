@@ -10,14 +10,15 @@
 It can group and merge overlapping intervals as well as remove parts of
 intervals, based on other intervals.
 
-`{ints}` uses [`{data.table}`](https://rdatatable.gitlab.io/data.table/)
-for memory efficiency and speed, it will always return a `data.table`
-object.
+[`{ints}`](ds-turner.github.io/ints/) uses
+[`{data.table}`](https://rdatatable.gitlab.io/data.table/) for memory
+efficiency and speed, it will always return a `data.table` object.
 
 ## Installation
 
-You can install the development version of `{ints}` from
-[GitHub](https://github.com/) with:
+You can install the development version of
+[`{ints}`](ds-turner.github.io/ints/) from [GitHub](https://github.com/)
+with:
 
 ``` r
 pak::pak("ds-turner/ints")
