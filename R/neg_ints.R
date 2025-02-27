@@ -14,7 +14,6 @@
 #' @param .upper (Optional) The column name or value representing the upper bound for the intervals.
 #'   If `NULL`, no upper bound is applied.
 #' @param .gap (Optional) The size of the gap between intervals. Default is `1`.
-#' @param pac_ints (Optional) A logical value indicating whether to use `pac_ints` for interval calculation. Default is `FALSE`.
 #'
 #' @return A data frame or tibble containing both positive and negative intervals, with columns for
 #'   start, end, lower bound, upper bound, and interval type (`int_type`).
@@ -29,6 +28,8 @@
 #' - The `int_type` column is added to the output to distinguish between positive (`"pos"`) and
 #'   negative (`"neg"`) intervals.
 #'
+#'@details
+#' If `.data` contains overlapping intervals you may get unexpected results.  Please use `pac_ints` if required.
 #' @examples
 #'
 #' data <- data.frame(
@@ -41,7 +42,7 @@
 #' print(result)
 #'
 #' @export
-neg_ints <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1, pac_ints = FALSE) {
+neg_ints <- function(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1) {
 
   # create a data.table if
   if(!data.table::is.data.table(.data)) {

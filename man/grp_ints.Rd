@@ -4,10 +4,10 @@
 \alias{grp_ints}
 \title{Group Overlapping Intervals}
 \usage{
-grp_ints(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id)
+grp_ints(.data, .start, .end, ..., .gap = 1, .group_col = int_grp_id)
 }
 \arguments{
-\item{.data}{A data frame or tibble containing the interval data.}
+\item{.data}{A data frame containing the interval data.}
 
 \item{.start}{The column name (unquoted) representing the start of the intervals.}
 
@@ -17,17 +17,17 @@ grp_ints(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id)
 
 \item{.gap}{The maximum allowed gap between intervals for them to be considered overlapping.
 Intervals are grouped if the start of one interval is less than or equal to
-the end of the previous interval plus the gap.}
+the end of the previous interval plus the gap. Default is 1.}
 
-\item{.group_col}{The name of the column that will indicate the group ID for overlapping intervals.  Defualt is int_grp_id.}
+\item{.group_col}{The name of the column that will indicate the group ID for overlapping intervals.  Default is \code{int_grp_id}.}
 }
 \value{
-A tibble with the original data and an additional column indicating
-the group ID for overlapping intervals.
+A \code{data.table} with the original data and an additional column indicating
+the group ID for overlapping intervals (the \code{.group_id} column).
 }
 \description{
-This function groups overlapping intervals in a dataset based on start and end columns.
-It assigns a unique group ID (\code{int_grp_id}) to each set of overlapping intervals.
+This function groups overlapping intervals based on its start and end.
+It assigns a unique group ID to each set of overlapping intervals.
 Intervals are considered overlapping if the start of one interval is within the gap
 threshold of the end of another interval.
 }

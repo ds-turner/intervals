@@ -7,7 +7,7 @@
 pac_ints(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id)
 }
 \arguments{
-\item{.data}{A data frame or tibble containing the interval data.}
+\item{.data}{A data frame containing the interval data.}
 
 \item{.start}{The column name (unquoted) representing the start of the intervals.}
 
@@ -23,8 +23,8 @@ the end of the previous interval plus the gap.}
 This column is used to group overlapping intervals.}
 }
 \value{
-A tibble with the summarized intervals. Each row represents a packed interval,
-with the minimum start value, maximum end value, and the grouping columns.
+A \code{data.table} with the summarized intervals. Each row represents a packed interval,
+with the minimum start value, maximum end value, the grouping columns and the \code{.group_id} column.
 }
 \description{
 This function takes a dataset with intervals (defined by start and end columns) and groups

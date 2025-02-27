@@ -4,12 +4,12 @@
 \alias{trm_ints}
 \title{Trim Intervals Based on Overlaps}
 \usage{
-trm_ints(x, y, .x_start, .x_end, .y_start, .y_end, ..., order = TRUE)
+trm_ints(x, y, .x_start, .x_end, .y_start, .y_end, ..., .gap = 0, order = TRUE)
 }
 \arguments{
-\item{x}{A data frame or tibble containing the primary intervals to be trimmed.}
+\item{x}{A data frame containing the primary intervals to be trimmed.}
 
-\item{y}{A data frame or tibble containing the intervals used to trim \code{x}.}
+\item{y}{A data frame containing the intervals used to trim \code{x}.}
 
 \item{.x_start}{The column name in \code{x} representing the start of the intervals.}
 
@@ -21,11 +21,13 @@ trm_ints(x, y, .x_start, .x_end, .y_start, .y_end, ..., order = TRUE)
 
 \item{...}{Additional columns to group by when calculating overlaps and trimming intervals.}
 
+\item{.gap}{The gaps left when intervals are trimmed. Default is 0.}
+
 \item{order}{A logical value indicating whether to order the resulting intervals by start and end points.
 Default is \code{TRUE}.}
 }
 \value{
-A data frame or tibble containing the trimmed intervals from \code{x}, with columns for start, end,
+A \code{data.table} containing the trimmed intervals from \code{x}, with columns for start, end,
 and any grouping variables.
 }
 \description{
@@ -34,13 +36,7 @@ It splits intervals in \code{x} at the boundaries of overlaps with \code{y}, rem
 returns the resulting intervals. Optionally, the output can be ordered by start and end points.
 }
 \details{
-\itemize{
-\item The function identifies overlaps between intervals in \code{x} and \code{y} using the \code{get_overlaps} helper function.
-\item It calculates split points at the boundaries of overlapping intervals using the \code{get_split_points} helper function.
-\item The intervals in \code{x} are split at these points using the \code{split_ints} helper function.
-\item Unwanted intervals (those overlapping with \code{y}) are removed using the \code{rm_ints} helper function.
-\item If \code{order = TRUE}, the resulting intervals are ordered by start and end points.
-}
+If \code{x} and \code{y} contains overlapping intervals you may get unexpected results.  Please use \code{pac_ints} if required.
 }
 \examples{
 x <- data.frame(

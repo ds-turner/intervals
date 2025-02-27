@@ -5,7 +5,7 @@
 #' overlapping intervals into a single interval per group, with the minimum start and maximum end
 #' values for each group.
 #'
-#' @param .data A data frame or tibble containing the interval data.
+#' @param .data A data frame containing the interval data.
 #' @param .start The column name (unquoted) representing the start of the intervals.
 #' @param .end The column name (unquoted) representing the end of the intervals.
 #' @param ... Additional columns to group by before identifying and packing intervals.
@@ -15,8 +15,8 @@
 #' @param .group_col The name of the column to store the group IDs (default: `int_grp_id`).
 #'                   This column is used to group overlapping intervals.
 #'
-#' @return A tibble with the summarized intervals. Each row represents a packed interval,
-#'         with the minimum start value, maximum end value, and the grouping columns.
+#' @return A `data.table` with the summarized intervals. Each row represents a packed interval,
+#'         with the minimum start value, maximum end value, the grouping columns and the `.group_id` column.
 #'
 #' @examples
 #' \dontrun{

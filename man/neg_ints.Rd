@@ -4,16 +4,7 @@
 \alias{neg_ints}
 \title{Generate Negative Intervals Between Positive Intervals}
 \usage{
-neg_ints(
-  .data,
-  .start,
-  .end,
-  ...,
-  .lower = NULL,
-  .upper = NULL,
-  .gap = 1,
-  pac_ints = FALSE
-)
+neg_ints(.data, .start, .end, ..., .lower = NULL, .upper = NULL, .gap = 1)
 }
 \arguments{
 \item{.data}{A data frame or tibble containing the interval data.}
@@ -31,8 +22,6 @@ If \code{NULL}, no lower bound is applied.}
 If \code{NULL}, no upper bound is applied.}
 
 \item{.gap}{(Optional) The size of the gap between intervals. Default is \code{1}.}
-
-\item{pac_ints}{(Optional) A logical value indicating whether to use \code{pac_ints} for interval calculation. Default is \code{FALSE}.}
 }
 \value{
 A data frame or tibble containing both positive and negative intervals, with columns for
@@ -55,6 +44,8 @@ specified upper bound.
 \item The \code{int_type} column is added to the output to distinguish between positive (\code{"pos"}) and
 negative (\code{"neg"}) intervals.
 }
+
+If \code{.data} contains overlapping intervals you may get unexpected results.  Please use \code{pac_ints} if required.
 }
 \examples{
 

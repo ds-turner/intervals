@@ -4,25 +4,22 @@
 #' It splits intervals in `x` at the boundaries of overlaps with `y`, removes unwanted intervals, and
 #' returns the resulting intervals. Optionally, the output can be ordered by start and end points.
 #'
-#' @param x A data frame or tibble containing the primary intervals to be trimmed.
-#' @param y A data frame or tibble containing the intervals used to trim `x`.
+#' @param x A data frame containing the primary intervals to be trimmed.
+#' @param y A data frame containing the intervals used to trim `x`.
 #' @param .x_start The column name in `x` representing the start of the intervals.
 #' @param .x_end The column name in `x` representing the end of the intervals.
 #' @param .y_start The column name in `y` representing the start of the intervals.
 #' @param .y_end The column name in `y` representing the end of the intervals.
 #' @param ... Additional columns to group by when calculating overlaps and trimming intervals.
+#' @param .gap The gaps left when intervals are trimmed. Default is 0.
 #' @param order A logical value indicating whether to order the resulting intervals by start and end points.
 #'   Default is `TRUE`.
 #'
-#' @return A data frame or tibble containing the trimmed intervals from `x`, with columns for start, end,
+#' @return A `data.table` containing the trimmed intervals from `x`, with columns for start, end,
 #'   and any grouping variables.
 #'
 #' @details
-#' - The function identifies overlaps between intervals in `x` and `y` using the `get_overlaps` helper function.
-#' - It calculates split points at the boundaries of overlapping intervals using the `get_split_points` helper function.
-#' - The intervals in `x` are split at these points using the `split_ints` helper function.
-#' - Unwanted intervals (those overlapping with `y`) are removed using the `rm_ints` helper function.
-#' - If `order = TRUE`, the resulting intervals are ordered by start and end points.
+#' If `x` and `y` contains overlapping intervals you may get unexpected results.  Please use `pac_ints` if required.
 #'
 #' @examples
 #' x <- data.frame(
@@ -41,7 +38,7 @@
 #' print(result)
 #'
 #' @export
-trm_ints <- function(x, y, .x_start, .x_end, .y_start, .y_end, ..., order = TRUE) {
+trm_ints <- function(x, y, .x_start, .x_end, .y_start, .y_end, ..., .gap = 0, order = TRUE) {
 
   # create a data.table if
   if(!data.table::is.data.table(x)) {
@@ -54,7 +51,7 @@ trm_ints <- function(x, y, .x_start, .x_end, .y_start, .y_end, ..., order = TRUE
   }
 
   # split up the ints into the smallest possible parts
-  i <- eval(substitute(split_ints_dt(x, y, .x_start, .x_end, .y_start, .y_end, ...)))
+  i <- eval(substitute(split_ints_dt(x, y, .x_start, .x_end, .y_start, .y_end, ..., .gap = .gap)))
 
   # remove the parts thqt we dont want
   i <- eval(substitute(rm_ints_dt(i, x, y, .x_start, .x_end, .y_start, .y_end, ...)))
@@ -68,7 +65,7 @@ trm_ints <- function(x, y, .x_start, .x_end, .y_start, .y_end, ..., order = TRUE
 
 # Helper functions --------------------------------------------------------
 
-split_ints_dt <- function(x, y, .x_start, .x_end, .y_start, .y_end, ...) {
+split_ints_dt <- function(x, y, .x_start, .x_end, .y_start, .y_end, ..., .gap) {
   # get all the split points
   points <- rbindlist(
     list(
@@ -81,14 +78,14 @@ split_ints_dt <- function(x, y, .x_start, .x_end, .y_start, .y_end, ...) {
 
   # create new intervals
   eval(substitute(setorder(points, point)))
-  points[, let(.x_end = shift(point, type = "lead"), .x_start = point), by = grp_vars,
+  points[, let(.x_end = shift(point, type = "lead") - .gap, .x_start = point + .gap), by = grp_vars,
          env = list(
            .x_end = substitute(.x_end),
            .x_start = substitute(.x_start),
            grp_vars = eval(substitute(alist(...)))
          )]
 
-  # drop incomple intervals and select cols
+  # drop incomplete intervals and select cols
   points[!is.na(.x_end), vars,
          env = list(
            .x_end = substitute(.x_end),
@@ -96,7 +93,7 @@ split_ints_dt <- function(x, y, .x_start, .x_end, .y_start, .y_end, ...) {
          )]
 }
 
-get_within_ids <- function(x, y, .x_start, .x_end, .y_start, .y_end, ...) {
+get_withins <- function(x, y, .x_start, .x_end, .y_start, .y_end, ..., which = F) {
 
   ids <- names(rlang::enquos(..., .named = TRUE))
   .x_start <- deparse(substitute(.x_start))
@@ -106,17 +103,22 @@ get_within_ids <- function(x, y, .x_start, .x_end, .y_start, .y_end, ...) {
 
   join_spec = c(ids, paste(.x_start, ">=", .y_start), paste(.x_end,"<=",.y_end))
 
-  x[y, on = join_spec, which = T]
+  x[y, on = join_spec, which = which]
 
 }
 
 rm_ints_dt <- function(i, x, y, .x_start, .x_end, .y_start, .y_end, ...) {
 
-  x_within <- eval(substitute(get_within_ids(i, x, .x_start, .x_end, .x_start, .x_end, ...)))
-  y_within <- eval(substitute(get_within_ids(i, y, .x_start, .x_end, .y_start, .y_end, ...)))
+  ids <- names(rlang::enquos(..., .named = TRUE))
+  .x_start <- deparse(substitute(.x_start))
+  .x_end <- deparse(substitute(.x_end))
+  .y_start <- deparse(substitute(.y_start))
+  .y_end <- deparse(substitute(.y_end))
 
-  keep <- x_within[!x_within %in% y_within]
+  join_spec = c(ids, paste(.x_start, "<=", .x_start), paste(.x_end,">=",.x_end))
+  i <- x[i, on = join_spec, nomatch = NULL]
 
-  i[keep]
+  join_spec = c(ids, paste(.x_start, ">=", .y_start), paste(.x_end,"<=",.y_end))
+  i[!y, on = join_spec]
 
 }
