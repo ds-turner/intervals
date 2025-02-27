@@ -249,6 +249,12 @@ exclusive
 daily <- trt[dose_freq == "daily"]
 weekly <- trt[dose_freq == "weekly"]
 monthly <- trt[dose_freq == "monthly"]
+
+weekly
+#>    pat_id dose_freq trt_start_date trt_end_date
+#>     <num>    <char>         <Date>       <Date>
+#> 1:      1    weekly     2023-06-05   2023-08-15
+#> 2:      2    weekly     2023-03-05   2023-03-15
 # # remove the parts of the week dosing periods that overlap with the daily dosing intervals
 # weekly <- trm_ints(
 #   weekly,
@@ -262,19 +268,19 @@ monthly <- trt[dose_freq == "monthly"]
 #   )
 # # remove the parts of the monthly dosing periods that overlap with the daily and weelky dosing intervals
 # monthly <- trm_ints(
-#   monthly, 
-#   rbind(daily, weekly), 
-#   trt_start_date, 
-#   trt_end_date, 
-#   trt_start_date, 
-#   trt_end_date, 
-#   pat_id, 
+#   monthly,
+#   rbind(daily, weekly),
+#   trt_start_date,
+#   trt_end_date,
+#   trt_start_date,
+#   trt_end_date,
+#   pat_id,
 #   .gap = 1
 #   )
 # 
 # trt2 <- rbindlist(
 #   list(
-#     trt[dose_freq == "daily"], 
+#     trt[dose_freq == "daily"],
 #     weekly,
 #     monthly
 #   )
