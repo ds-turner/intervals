@@ -105,98 +105,8 @@
 <div class="section level3">
 <h3 id="triming-intervals">Triming Intervals<a class="anchor" aria-label="anchor" href="#triming-intervals"></a>
 </h3>
-<p>You can remove parts of intervals based on another set of intervals</p>
+<p>Below is an example of some treatment data. Each patient has a period monthly treatment for the duration of 2023. For our analysis we will consider the different dose frequencies as mutually exclusive and hierarchical, i.e. a patient will not be considered as being dosed weekly if there is a record of daily dosing and a patient will not be considered as being dosed monthly if there is a record of weekly dosing.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pats</span> <span class="op">&lt;-</span> <span class="fl">7</span></span>
-<span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">pats</span><span class="op">)</span>,</span>
-<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>, <span class="va">pats</span><span class="op">)</span>,</span>
-<span>  end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">20</span>, <span class="va">pats</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">7</span>, <span class="fl">7</span>, <span class="fl">7</span><span class="op">)</span>,</span>
-<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">19</span>, <span class="fl">4</span>, <span class="fl">10</span>, <span class="fl">19</span>, <span class="fl">4</span>, <span class="fl">9</span>, <span class="fl">14</span>, <span class="fl">19</span>, <span class="fl">7</span>, <span class="fl">9</span>, <span class="fl">11</span>, <span class="fl">13</span><span class="op">)</span>,</span>
-<span>  end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>, <span class="fl">21</span>, <span class="fl">6</span>, <span class="fl">21</span>, <span class="fl">6</span>, <span class="fl">15</span>, <span class="fl">21</span>, <span class="fl">6</span>, <span class="fl">11</span>, <span class="fl">16</span>, <span class="fl">21</span>, <span class="fl">8</span>, <span class="fl">10</span>, <span class="fl">12</span>, <span class="fl">18</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>Here we will remove the parts of the intervals in x that overlap with the intervals in y.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/trm_ints.html">trm_ints</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">id</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        id start   end</span></span>
-<span><span class="co">#&gt;     &lt;int&gt; &lt;num&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:     1     5    10</span></span>
-<span><span class="co">#&gt;  2:     1    15    20</span></span>
-<span><span class="co">#&gt;  3:     3     6    20</span></span>
-<span><span class="co">#&gt;  4:     4     5    19</span></span>
-<span><span class="co">#&gt;  5:     5     6    10</span></span>
-<span><span class="co">#&gt;  6:     5    15    19</span></span>
-<span><span class="co">#&gt;  7:     6     6     9</span></span>
-<span><span class="co">#&gt;  8:     6    11    14</span></span>
-<span><span class="co">#&gt;  9:     6    16    19</span></span>
-<span><span class="co">#&gt; 10:     7     5     7</span></span>
-<span><span class="co">#&gt; 11:     7     8     9</span></span>
-<span><span class="co">#&gt; 12:     7    10    11</span></span>
-<span><span class="co">#&gt; 13:     7    12    13</span></span>
-<span><span class="co">#&gt; 14:     7    18    20</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="negative-intervals">Negative Intervals<a class="anchor" aria-label="anchor" href="#negative-intervals"></a>
-</h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>,   <span class="st">"c"</span>, <span class="st">"c"</span>, <span class="st">"c"</span>, <span class="st">"d"</span><span class="op">)</span>,</span>
-<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">10</span>, <span class="fl">18</span>, <span class="fl">23</span>, <span class="fl">7</span>, <span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">7</span>, <span class="fl">12</span>, <span class="fl">23</span>, <span class="fl">10</span><span class="op">)</span>,</span>
-<span>  end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">15</span>, <span class="fl">21</span>, <span class="fl">25</span>, <span class="fl">9</span>, <span class="fl">16</span>, <span class="fl">3</span>, <span class="fl">9</span>, <span class="fl">16</span>, <span class="fl">25</span>, <span class="fl">15</span><span class="op">)</span>,</span>
-<span>  index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>,</span>
-<span>  study_end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">ints</span></span>
-<span><span class="co">#&gt;    id start end index study_end</span></span>
-<span><span class="co">#&gt; 1   a     1   3     5        20</span></span>
-<span><span class="co">#&gt; 2   a     4   7     5        20</span></span>
-<span><span class="co">#&gt; 3   a    10  15     5        20</span></span>
-<span><span class="co">#&gt; 4   a    18  21     5        20</span></span>
-<span><span class="co">#&gt; 5   a    23  25     5        20</span></span>
-<span><span class="co">#&gt; 6   b     7   9     5        20</span></span>
-<span><span class="co">#&gt; 7   b    12  16     5        20</span></span>
-<span><span class="co">#&gt; 8   c     1   3     5        20</span></span>
-<span><span class="co">#&gt; 9   c     7   9     5        20</span></span>
-<span><span class="co">#&gt; 10  c    12  16     5        20</span></span>
-<span><span class="co">#&gt; 11  c    23  25     5        20</span></span>
-<span><span class="co">#&gt; 12  d    10  15     5        20</span></span></code></pre></div>
-<p>We can also create a set of intervals that represent the gaps between the given intervals</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/neg_ints.html">neg_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">id</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        id start   end</span></span>
-<span><span class="co">#&gt;    &lt;char&gt; &lt;num&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:      a     8     9</span></span>
-<span><span class="co">#&gt; 2:      a    16    17</span></span>
-<span><span class="co">#&gt; 3:      a    22    22</span></span>
-<span><span class="co">#&gt; 4:      b    10    11</span></span>
-<span><span class="co">#&gt; 5:      c     4     6</span></span>
-<span><span class="co">#&gt; 6:      c    10    11</span></span>
-<span><span class="co">#&gt; 7:      c    17    22</span></span></code></pre></div>
-<p>These ints can have an upper and lower bounds if required</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/neg_ints.html">neg_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">id</span>, .lower <span class="op">=</span> <span class="va">index</span>, .upper <span class="op">=</span> <span class="va">study_end</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         id start   end index study_end</span></span>
-<span><span class="co">#&gt;     &lt;char&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;     &lt;num&gt;</span></span>
-<span><span class="co">#&gt;  1:      a     8     9     5        20</span></span>
-<span><span class="co">#&gt;  2:      a    16    17     5        20</span></span>
-<span><span class="co">#&gt;  3:      b     5     6     5        20</span></span>
-<span><span class="co">#&gt;  4:      b    10    11     5        20</span></span>
-<span><span class="co">#&gt;  5:      b    17    20     5        20</span></span>
-<span><span class="co">#&gt;  6:      c     4     6     5        20</span></span>
-<span><span class="co">#&gt;  7:      c    10    11     5        20</span></span>
-<span><span class="co">#&gt;  8:      c    17    22     5        20</span></span>
-<span><span class="co">#&gt;  9:      d     5     9     5        20</span></span>
-<span><span class="co">#&gt; 10:      d    16    20     5        20</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="section"></h3>
-<p>We have been given the below treatment data. Each patient has a period monthly treatment for the duration of 2023. For our analysis we will consider the different dose frequencies as mutually exclusive and higharical, i.e. a patient will not be considered as being dosed weekly if there is a record of daily dosing and a patient will not be considered as being dosed monthly if there is a record of weekly dosing.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  pat_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>,</span>
 <span>             <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span></span>
@@ -223,8 +133,8 @@
 <span><span class="co">#&gt; 4      2     2023-03-02   2023-03-10     daily</span></span>
 <span><span class="co">#&gt; 5      2     2023-03-05   2023-03-15    weekly</span></span>
 <span><span class="co">#&gt; 6      2     2023-01-01   2023-12-31   monthly</span></span></code></pre></div>
-<p>Then we can split up the intervals to make sure everything is mutually exclusive.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>Here we split up the intervals to make sure everything is mutually exclusive.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create a list contaiing each dose level</span></span>
 <span><span class="va">trt_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">trt</span><span class="op">$</span><span class="va">dose_freq</span><span class="op">)</span></span>
 <span></span>
@@ -268,12 +178,99 @@
 <span><span class="co">#&gt; 7:      2     2023-03-02   2023-03-10     daily</span></span>
 <span><span class="co">#&gt; 8:      2     2023-03-11   2023-03-14    weekly</span></span>
 <span><span class="co">#&gt; 9:      2     2023-03-15   2023-12-30   monthly</span></span></code></pre></div>
+<p>You can remove parts of intervals based on another set of intervals</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pats</span> <span class="op">&lt;-</span> <span class="fl">7</span></span>
+<span></span>
+<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">pats</span><span class="op">)</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>, <span class="va">pats</span><span class="op">)</span>,</span>
+<span>  end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">20</span>, <span class="va">pats</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">7</span>, <span class="fl">7</span>, <span class="fl">7</span><span class="op">)</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">19</span>, <span class="fl">4</span>, <span class="fl">10</span>, <span class="fl">19</span>, <span class="fl">4</span>, <span class="fl">9</span>, <span class="fl">14</span>, <span class="fl">19</span>, <span class="fl">7</span>, <span class="fl">9</span>, <span class="fl">11</span>, <span class="fl">13</span><span class="op">)</span>,</span>
+<span>  end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>, <span class="fl">21</span>, <span class="fl">6</span>, <span class="fl">21</span>, <span class="fl">6</span>, <span class="fl">15</span>, <span class="fl">21</span>, <span class="fl">6</span>, <span class="fl">11</span>, <span class="fl">16</span>, <span class="fl">21</span>, <span class="fl">8</span>, <span class="fl">10</span>, <span class="fl">12</span>, <span class="fl">18</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Here we will remove the parts of the intervals in x that overlap with the intervals in y.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/trm_ints.html">trm_ints</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">id</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        id start   end</span></span>
+<span><span class="co">#&gt;     &lt;int&gt; &lt;num&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt;  1:     1     5    10</span></span>
+<span><span class="co">#&gt;  2:     1    15    20</span></span>
+<span><span class="co">#&gt;  3:     3     6    20</span></span>
+<span><span class="co">#&gt;  4:     4     5    19</span></span>
+<span><span class="co">#&gt;  5:     5     6    10</span></span>
+<span><span class="co">#&gt;  6:     5    15    19</span></span>
+<span><span class="co">#&gt;  7:     6     6     9</span></span>
+<span><span class="co">#&gt;  8:     6    11    14</span></span>
+<span><span class="co">#&gt;  9:     6    16    19</span></span>
+<span><span class="co">#&gt; 10:     7     5     7</span></span>
+<span><span class="co">#&gt; 11:     7     8     9</span></span>
+<span><span class="co">#&gt; 12:     7    10    11</span></span>
+<span><span class="co">#&gt; 13:     7    12    13</span></span>
+<span><span class="co">#&gt; 14:     7    18    20</span></span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="keywords">Keywords<a class="anchor" aria-label="anchor" href="#keywords"></a>
-</h2>
+<div class="section level3">
+<h3 id="negative-intervals">Negative Intervals<a class="anchor" aria-label="anchor" href="#negative-intervals"></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>,   <span class="st">"c"</span>, <span class="st">"c"</span>, <span class="st">"c"</span>, <span class="st">"d"</span><span class="op">)</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">10</span>, <span class="fl">18</span>, <span class="fl">23</span>, <span class="fl">7</span>, <span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">7</span>, <span class="fl">12</span>, <span class="fl">23</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>  end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">15</span>, <span class="fl">21</span>, <span class="fl">25</span>, <span class="fl">9</span>, <span class="fl">16</span>, <span class="fl">3</span>, <span class="fl">9</span>, <span class="fl">16</span>, <span class="fl">25</span>, <span class="fl">15</span><span class="op">)</span>,</span>
+<span>  index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>  study_end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span>, <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">ints</span></span>
+<span><span class="co">#&gt;    id start end index study_end</span></span>
+<span><span class="co">#&gt; 1   a     1   3     5        20</span></span>
+<span><span class="co">#&gt; 2   a     4   7     5        20</span></span>
+<span><span class="co">#&gt; 3   a    10  15     5        20</span></span>
+<span><span class="co">#&gt; 4   a    18  21     5        20</span></span>
+<span><span class="co">#&gt; 5   a    23  25     5        20</span></span>
+<span><span class="co">#&gt; 6   b     7   9     5        20</span></span>
+<span><span class="co">#&gt; 7   b    12  16     5        20</span></span>
+<span><span class="co">#&gt; 8   c     1   3     5        20</span></span>
+<span><span class="co">#&gt; 9   c     7   9     5        20</span></span>
+<span><span class="co">#&gt; 10  c    12  16     5        20</span></span>
+<span><span class="co">#&gt; 11  c    23  25     5        20</span></span>
+<span><span class="co">#&gt; 12  d    10  15     5        20</span></span></code></pre></div>
+<p>We can also create a set of intervals that represent the gaps between the given intervals</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/neg_ints.html">neg_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">id</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        id start   end</span></span>
+<span><span class="co">#&gt;    &lt;char&gt; &lt;num&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:      a     8     9</span></span>
+<span><span class="co">#&gt; 2:      a    16    17</span></span>
+<span><span class="co">#&gt; 3:      a    22    22</span></span>
+<span><span class="co">#&gt; 4:      b    10    11</span></span>
+<span><span class="co">#&gt; 5:      c     4     6</span></span>
+<span><span class="co">#&gt; 6:      c    10    11</span></span>
+<span><span class="co">#&gt; 7:      c    17    22</span></span></code></pre></div>
+<p>These intervals can have an upper and lower bounds if required</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/neg_ints.html">neg_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">id</span>, .lower <span class="op">=</span> <span class="va">index</span>, .upper <span class="op">=</span> <span class="va">study_end</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         id start   end index study_end</span></span>
+<span><span class="co">#&gt;     &lt;char&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;     &lt;num&gt;</span></span>
+<span><span class="co">#&gt;  1:      a     8     9     5        20</span></span>
+<span><span class="co">#&gt;  2:      a    16    17     5        20</span></span>
+<span><span class="co">#&gt;  3:      b     5     6     5        20</span></span>
+<span><span class="co">#&gt;  4:      b    10    11     5        20</span></span>
+<span><span class="co">#&gt;  5:      b    17    20     5        20</span></span>
+<span><span class="co">#&gt;  6:      c     4     6     5        20</span></span>
+<span><span class="co">#&gt;  7:      c    10    11     5        20</span></span>
+<span><span class="co">#&gt;  8:      c    17    22     5        20</span></span>
+<span><span class="co">#&gt;  9:      d     5     9     5        20</span></span>
+<span><span class="co">#&gt; 10:      d    16    20     5        20</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="keywords">Keywords<a class="anchor" aria-label="anchor" href="#keywords"></a>
+</h4>
 <p>interval packing; interval merging; interval cutting;</p>
+</div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
