@@ -6,10 +6,11 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-[`{ints}`](ds-turner.github.io/ints/) helps users tidy up messy ints. It
-can group and merge overlapping ints as well as remove parts of one set
-of ints, based on another set of ints. In this context an interval is
-defined as having a start and a stop. It can be numeric or date type.
+[`{ints}`](ds-turner.github.io/ints/) helps users tidy up messy
+intervals. It can group and merge overlapping intervals as well as
+remove parts of one set of intervals, based on another set of intervals.
+In this context an interval is defined as having a start and a stop. It
+can be numeric or date type.
 
 `{ints}` uses [`{data.table}`](https://rdatatable.gitlab.io/data.table/)
 for memory efficiency and speed, it will always return a `data.table`
@@ -49,7 +50,7 @@ library(ints)
 ```
 
 `ints` is a set of overlapping intervals. We can identify the
-overlapping ints and add an ID column `int_grp_id` for overlapping
+overlapping intervals and add an ID column `int_grp_id` for overlapping
 groups.
 
 ``` r
