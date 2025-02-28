@@ -33,19 +33,19 @@ library(ints)
 ### Grouping and Merging Intervals
 
 We can group overlapping intervals by using `grp_ints`. It returns the
-same data but add an id for intervlase that overlap
+same data but add an id for intervals that overlap
 
 ``` r
  ints <- data.frame(
     id = c("A", "A", "A", "B", "B", "B"),
-    st = c(1, 2, 5, 10, 12, 14),
+    st = c(1, 2, 6, 10, 12, 14),
     end = c(3, 4, 7, 11, 14, 16)
   )
  ints
 #>   id st end
 #> 1  A  1   3
 #> 2  A  2   4
-#> 3  A  5   7
+#> 3  A  6   7
 #> 4  B 10  11
 #> 5  B 12  14
 #> 6  B 14  16
@@ -57,10 +57,10 @@ grp_ints(ints, st, end, id)
 #>    <char> <num> <num>      <int>
 #> 1:      A     1     3          1
 #> 2:      A     2     4          1
-#> 3:      A     5     7          1
-#> 4:      B    10    11          2
-#> 5:      B    12    14          2
-#> 6:      B    14    16          2
+#> 3:      A     6     7          2
+#> 4:      B    10    11          3
+#> 5:      B    12    14          3
+#> 6:      B    14    16          3
 ```
 
 We can also merge overlapping intervals together using `merge_ints`. It
@@ -71,8 +71,9 @@ grouping variables used.
 merge_ints(ints, st, end, id)
 #>        id int_grp_id    st   end
 #>    <char>      <int> <num> <num>
-#> 1:      A          1     1     7
-#> 2:      B          2    10    16
+#> 1:      A          1     1     4
+#> 2:      A          2     6     7
+#> 3:      B          3    10    16
 ```
 
 ### Triming Intervals
