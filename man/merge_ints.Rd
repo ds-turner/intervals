@@ -4,7 +4,7 @@
 \alias{merge_ints}
 \title{Merge Overlapping Intervals}
 \usage{
-merge_ints(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id)
+merge_ints(.data, .start, .end, ..., .gap = 1, .group_col = int_grp_id)
 }
 \arguments{
 \item{.data}{A data frame containing the interval data.}

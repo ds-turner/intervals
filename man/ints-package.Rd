@@ -4,8 +4,10 @@
 \name{ints-package}
 \alias{ints}
 \alias{ints-package}
-\title{ints: What the Package Does (One Line, Title Case)}
+\title{ints: Help With Overlapping Intervals}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Functions for handling ints. The primary functions are `grp_ints` and `merge_ints`, which group overlapping or continuous ints and merge the overlapping ints, respectively.
 }
 \seealso{
