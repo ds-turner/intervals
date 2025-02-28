@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # ints
 
-<!-- badges: start -->
+<!-- badges: start --> 
 <!-- badges: end -->
 
 [`{ints}`](ds-turner.github.io/ints/) helps to tidy up messy intervals. It can group and merge overlapping intervals as well as remove parts of intervals, based on other intervals. 

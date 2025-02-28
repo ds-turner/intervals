@@ -71,10 +71,8 @@ grouping variables used.
 merge_ints(ints, st, end, id)
 #>        id int_grp_id    st   end
 #>    <char>      <int> <num> <num>
-#> 1:      A          1     1     4
-#> 2:      A          2     5     7
-#> 3:      B          3    10    11
-#> 4:      B          4    12    16
+#> 1:      A          1     1     7
+#> 2:      B          2    10    16
 ```
 
 ### Triming Intervals

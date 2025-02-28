@@ -34,7 +34,7 @@
 #' }
 #'
 #' @export
-merge_ints <- function(.data, .start, .end, ..., .gap = 0, .group_col = int_grp_id) {
+merge_ints <- function(.data, .start, .end, ..., .gap = 1, .group_col = int_grp_id) {
 
   x <- .data
 
