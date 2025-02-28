@@ -76,18 +76,18 @@
 <div class="section level3">
 <h3 id="grouping-and-merging-intervals">Grouping and Merging Intervals<a class="anchor" aria-label="anchor" href="#grouping-and-merging-intervals"></a>
 </h3>
-<p>We can group overlapping intervals by using <code>grp_ints</code>. It returns the same data but add an id for intervlase that overlap</p>
+<p>We can group overlapping intervals by using <code>grp_ints</code>. It returns the same data but add an id for intervals that overlap</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">ints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
-<span>    st <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">12</span>, <span class="fl">14</span><span class="op">)</span>,</span>
+<span>    st <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">6</span>, <span class="fl">10</span>, <span class="fl">12</span>, <span class="fl">14</span><span class="op">)</span>,</span>
 <span>    end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">7</span>, <span class="fl">11</span>, <span class="fl">14</span>, <span class="fl">16</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span> <span class="va">ints</span></span>
 <span><span class="co">#&gt;   id st end</span></span>
 <span><span class="co">#&gt; 1  A  1   3</span></span>
 <span><span class="co">#&gt; 2  A  2   4</span></span>
-<span><span class="co">#&gt; 3  A  5   7</span></span>
+<span><span class="co">#&gt; 3  A  6   7</span></span>
 <span><span class="co">#&gt; 4  B 10  11</span></span>
 <span><span class="co">#&gt; 5  B 12  14</span></span>
 <span><span class="co">#&gt; 6  B 14  16</span></span></code></pre></div>
@@ -97,17 +97,18 @@
 <span><span class="co">#&gt;    &lt;char&gt; &lt;num&gt; &lt;num&gt;      &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1:      A     1     3          1</span></span>
 <span><span class="co">#&gt; 2:      A     2     4          1</span></span>
-<span><span class="co">#&gt; 3:      A     5     7          1</span></span>
-<span><span class="co">#&gt; 4:      B    10    11          2</span></span>
-<span><span class="co">#&gt; 5:      B    12    14          2</span></span>
-<span><span class="co">#&gt; 6:      B    14    16          2</span></span></code></pre></div>
+<span><span class="co">#&gt; 3:      A     6     7          2</span></span>
+<span><span class="co">#&gt; 4:      B    10    11          3</span></span>
+<span><span class="co">#&gt; 5:      B    12    14          3</span></span>
+<span><span class="co">#&gt; 6:      B    14    16          3</span></span></code></pre></div>
 <p>We can also merge overlapping intervals together using <code>merge_ints</code>. It will return the interval start and end, the interval group id and any grouping variables used.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/merge_ints.html">merge_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">st</span>, <span class="va">end</span>, <span class="va">id</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        id int_grp_id    st   end</span></span>
 <span><span class="co">#&gt;    &lt;char&gt;      &lt;int&gt; &lt;num&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:      A          1     1     7</span></span>
-<span><span class="co">#&gt; 2:      B          2    10    16</span></span></code></pre></div>
+<span><span class="co">#&gt; 1:      A          1     1     4</span></span>
+<span><span class="co">#&gt; 2:      A          2     6     7</span></span>
+<span><span class="co">#&gt; 3:      B          3    10    16</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="triming-intervals">Triming Intervals<a class="anchor" aria-label="anchor" href="#triming-intervals"></a>
