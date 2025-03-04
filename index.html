@@ -82,8 +82,9 @@
 <span>    id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
 <span>    st <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">6</span>, <span class="fl">10</span>, <span class="fl">12</span>, <span class="fl">14</span><span class="op">)</span>,</span>
 <span>    end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">7</span>, <span class="fl">11</span>, <span class="fl">14</span>, <span class="fl">16</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">ints</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">ints</span>, caption <span class="op">=</span> <span class="st">"ints"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">id</th>
@@ -123,7 +124,8 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>ints</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/grp_ints.html">grp_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">st</span>, <span class="va">end</span>, <span class="va">id</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        id    st   end int_grp_id</span></span>
 <span><span class="co">#&gt;    &lt;char&gt; &lt;num&gt; &lt;num&gt;      &lt;int&gt;</span></span>
@@ -134,7 +136,7 @@
 <span><span class="co">#&gt; 5:      B    12    14          3</span></span>
 <span><span class="co">#&gt; 6:      B    14    16          3</span></span></code></pre></div>
 <p>We can also merge overlapping intervals together using <code>merge_ints</code>. It will return the interval start and end, the interval group id and any grouping variables used.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/merge_ints.html">merge_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">st</span>, <span class="va">end</span>, <span class="va">id</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        id int_grp_id    st   end</span></span>
 <span><span class="co">#&gt;    &lt;char&gt;      &lt;int&gt; &lt;num&gt; &lt;num&gt;</span></span>
@@ -146,8 +148,8 @@
 <h3 id="triming-intervals">Triming Intervals<a class="anchor" aria-label="anchor" href="#triming-intervals"></a>
 </h3>
 <p>We can remove parts of intervals that overlap with another intervals.</p>
-<p>Below is an example of some treatment data. Each patient has a period of monthly, weekly and daily treatments. We consider the different dose frequencies to be mutually exclusive and hierarchical, i.e. a patient cannot be dosed weekly if there is a record of daily dosing and cannot be dosed monthly if there is a record of weekly dosing.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>Below is an example of some treatment data. Each patient has a period of monthly, weekly and daily treatments. The different dose frequencies should be mutually exclusive.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  pat_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>,</span>
 <span>             <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span></span>
@@ -174,8 +176,8 @@
 <span><span class="co">#&gt; 4      2     2023-03-02   2023-03-10     daily</span></span>
 <span><span class="co">#&gt; 5      2     2023-03-05   2023-03-15    weekly</span></span>
 <span><span class="co">#&gt; 6      2     2023-01-01   2023-12-31   monthly</span></span></code></pre></div>
-<p>We want to leave no overlaps in the treatment data above but we don’t want to merge the intervals. When an interval overlaps with another interval of a different frequency, we want to remove the overlapping part from the interval that has the lower frequency, therefore making the dose frequencies mutually exclusive.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>Our aim is to remove overlaps in the treatment data without merging the intervals. When an interval overlaps with another interval of a different frequency, we want to remove the overlapping part from the interval with the lower frequency, making the dose frequencies mutually exclusive.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create a list with a separate dataset for each frequency</span></span>
 <span><span class="va">trt_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">trt</span><span class="op">$</span><span class="va">dose_freq</span><span class="op">)</span></span>
 <span></span>
@@ -225,7 +227,7 @@
 <h3 id="negative-intervals">Negative Intervals<a class="anchor" aria-label="anchor" href="#negative-intervals"></a>
 </h3>
 <p>We can also create a set of intervals that represent the gaps between the given intervals</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ints</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>,   <span class="st">"c"</span>, <span class="st">"c"</span>, <span class="st">"c"</span>, <span class="st">"d"</span><span class="op">)</span>,</span>
 <span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">10</span>, <span class="fl">18</span>, <span class="fl">23</span>, <span class="fl">7</span>, <span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">7</span>, <span class="fl">12</span>, <span class="fl">23</span>, <span class="fl">10</span><span class="op">)</span>,</span>
@@ -247,7 +249,7 @@
 <span><span class="co">#&gt; 10  c    12  16     5        20</span></span>
 <span><span class="co">#&gt; 11  c    23  25     5        20</span></span>
 <span><span class="co">#&gt; 12  d    10  15     5        20</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/neg_ints.html">neg_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">id</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        id start   end</span></span>
 <span><span class="co">#&gt;    &lt;char&gt; &lt;num&gt; &lt;num&gt;</span></span>
@@ -259,7 +261,7 @@
 <span><span class="co">#&gt; 6:      c    10    11</span></span>
 <span><span class="co">#&gt; 7:      c    17    22</span></span></code></pre></div>
 <p>These intervals can have an upper and lower bounds if required</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/neg_ints.html">neg_ints</a></span><span class="op">(</span><span class="va">ints</span>, <span class="va">start</span>, <span class="va">end</span>, <span class="va">id</span>, .lower <span class="op">=</span> <span class="va">index</span>, .upper <span class="op">=</span> <span class="va">study_end</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         id start   end index study_end</span></span>
 <span><span class="co">#&gt;     &lt;char&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;     &lt;num&gt;</span></span>
