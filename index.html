@@ -148,7 +148,8 @@
 <code class="sourceCode R"><span><span class="co"># create a list with a separate dataset for each frequency</span></span>
 <span><span class="va">trt_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">trt</span>, <span class="va">trt</span><span class="op">$</span><span class="va">dose_freq</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># remove the parts of the weekly dosing periods that overlap with the daily dosing intervals</span></span>
+<span><span class="co"># remove the parts of the weekly dosing periods that overlap with the daily</span></span>
+<span><span class="co"># dosing intervals</span></span>
 <span><span class="va">trt_list</span><span class="op">$</span><span class="va">weekly</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/trm_ints.html">trm_ints</a></span><span class="op">(</span></span>
 <span>  <span class="va">trt_list</span><span class="op">$</span><span class="va">weekly</span>,</span>
 <span>  <span class="va">trt_list</span><span class="op">$</span><span class="va">daily</span>,</span>
@@ -159,7 +160,8 @@
 <span>  <span class="va">pat_id</span>,</span>
 <span>  .gap <span class="op">=</span> <span class="fl">1</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co"># remove the parts of the monthly dosing periods that overlap with the daily and weekly dosing intervals</span></span>
+<span><span class="co"># remove the parts of the monthly dosing periods that overlap with the daily and</span></span>
+<span><span class="co"># weekly dosing intervals</span></span>
 <span><span class="va">trt_list</span><span class="op">$</span><span class="va">monthly</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/trm_ints.html">trm_ints</a></span><span class="op">(</span></span>
 <span>  <span class="va">trt_list</span><span class="op">$</span><span class="va">monthly</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">trt_list</span><span class="op">$</span><span class="va">daily</span>, <span class="va">trt_list</span><span class="op">$</span><span class="va">weekly</span><span class="op">)</span>,</span>
